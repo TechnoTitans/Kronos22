@@ -19,6 +19,8 @@ public class Robot extends TimedRobot {
 
     private RobotContainer m_robotContainer;
 
+    private boolean isEnabled;
+
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -31,6 +33,9 @@ public class Robot extends TimedRobot {
         m_robotContainer.tshirtSolenoid.set(false);
         m_robotContainer.gun.getBarrel().resetEncoder();
         CommandScheduler.getInstance().enable();
+
+        isEnabled = false;
+
     }
 
     /**
@@ -47,6 +52,13 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        if (!m_robotContainer.titanDriveTeleop.isDisabled() && isEnabled) {
+            CommandScheduler.getInstance().enable();
+            isEnabled = false;
+        } else {
+            CommandScheduler.getInstance().disable();
+        }
+
     }
 
     /**
@@ -90,7 +102,8 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
         m_robotContainer.drive.brake();
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
+        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.titanDriveTeleop);
+        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.gunAim, m_robotContainer.titanDriveTeleop);
     }
 
     /**

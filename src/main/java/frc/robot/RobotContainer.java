@@ -8,10 +8,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.DriveTeleop;
-import frc.robot.commands.IndexTeleop;
-import frc.robot.commands.ShootTeleop;
-import frc.robot.commands.TiltTeleop;
+import frc.robot.commands.*;
 import frc.robot.motor.TitanSRX;
 import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.BarrelTilt;
@@ -41,10 +38,9 @@ public class RobotContainer {
     public TitanButton indexButton, shootButton;
 
     //Commands
-    public DriveTeleop driveTeleop;
     public IndexTeleop indexTeleop;
-    public TiltTeleop tiltTeleop;
     public ShootTeleop shootTeleop;
+    public TitanDriveTeleop titanDriveTeleop;
 
     public RobotContainer() {
         oi = new OI();
@@ -59,7 +55,6 @@ public class RobotContainer {
         rightRear.follow(rightFront);
 
         drive = new JankDrive(leftFront, rightFront);
-        driveTeleop = new DriveTeleop(drive, oi.getXboxLeftTrigger(), oi.getXboxRightTrigger(), oi.getXboxLeftX());
 
         //Turret
         // Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
@@ -71,17 +66,16 @@ public class RobotContainer {
         gun = new Barrel(barrel);
         gunAim = new BarrelTilt(tilt);
 
+        // commands
         indexTeleop = new IndexTeleop(gun);
-        tiltTeleop = new TiltTeleop(gunAim, oi.getXboxPOV());
         shootTeleop = new ShootTeleop(tshirtSolenoid, indexTeleop);
-
+        titanDriveTeleop = new TitanDriveTeleop(drive, shootTeleop, gunAim);
 
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-        indexButton.whenPressed(indexTeleop);
-        shootButton.whenPressed(shootTeleop);
+
     }
 
     public Command getAutonomousCommand() {
