@@ -48,7 +48,7 @@ public class TitanDriveTeleop extends CommandBase {
 
         xEntry = table.getEntry("x");
         yEntry = table.getEntry("y");
-        angleEntry = table.getEntry("angle");
+        angleEntry = table.getEntry("tiltangle");
         disableRobotEntry = table.getEntry("disabled");
         shootEntry = table.getEntry("shoot");
 
