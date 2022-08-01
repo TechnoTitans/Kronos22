@@ -32,7 +32,6 @@ public class TitanDriveParser extends CommandBase {
 
     public TitanDriveParser(JankDrive drive, ShootTeleop shootTeleop, BarrelTilt tilt) {
         inst = NetworkTableInstance.getDefault();
-
         table = inst.getTable("titandrive");
 
         this.drive = drive;
@@ -47,12 +46,14 @@ public class TitanDriveParser extends CommandBase {
     @Override
     public void initialize() {
 
-        xEntry = table.getEntry("x");
-        yEntry = table.getEntry("y");
-        angleEntry = table.getEntry("tiltangle");
-        disableRobotEntry = table.getEntry("disabled");
-        shootEntry = table.getEntry("shoot");
+//        xEntry = table.getEntry("x");
+//        yEntry = table.getEntry("y");
+//        angleEntry = table.getEntry("tiltangle");
+//        disableRobotEntry = table.getEntry("disabled");
+//        shootEntry = table.getEntry("shoot");
 
+        x = 0;
+        y = 0;
         angle = 0;
         shoot = false;
         disable = false;
