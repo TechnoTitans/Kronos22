@@ -40,7 +40,7 @@ public class IndexTeleop extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return barrel.getBarrelEncoder().get() >= barrel.DISTANCE;
     }
 
 }

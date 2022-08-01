@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -16,9 +17,6 @@ import frc.robot.subsystems.JankDrive;
 import frc.robot.utils.TitanButton;
 
 public class RobotContainer {
-    //OI
-    public OI oi;
-
     //Motors
     public TitanSRX leftFront, leftRear, rightFront, rightRear;
     public TitanSRX barrel, tilt;
@@ -27,7 +25,9 @@ public class RobotContainer {
     public Encoder barrelEncoder;
 
     //Solenoids
-    public Solenoid tshirtSolenoid;
+//    public Solenoid tshirtSolenoid;
+
+    public DigitalOutput dout;
 
     //Subsystems
     public JankDrive drive;
@@ -43,8 +43,6 @@ public class RobotContainer {
     public TitanDriveParser titanDriveParser;
 
     public RobotContainer() {
-        oi = new OI();
-
         //Drivetrain
         leftFront = new TitanSRX(RobotMap.leftFront, RobotMap.leftFrontReverse);
         leftRear = new TitanSRX(RobotMap.leftRear, RobotMap.leftRearReverse);
@@ -61,14 +59,18 @@ public class RobotContainer {
         barrelEncoder = new Encoder(RobotMap.barrelEncoderA, RobotMap.barrelEncoderB, RobotMap.barrelRevered, Encoder.EncodingType.k2X);
         barrel = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse, barrelEncoder);
         tilt = new TitanSRX(RobotMap.tilt, RobotMap.tiltReverse);
-        tshirtSolenoid = new Solenoid(RobotMap.PCM, PneumaticsModuleType.CTREPCM, RobotMap.tshirtSolenoid);
+
+//        tshirtSolenoid = new Solenoid(RobotMap.PCM, PneumaticsModuleType.CTREPCM, RobotMap.tshirtSolenoid);
 
         gun = new Barrel(barrel);
         gunAim = new BarrelTilt(tilt);
 
+        dout = new DigitalOutput(RobotMap.dout);
+        dout.setPWMRate(10000);
+
         // commands
         indexTeleop = new IndexTeleop(gun);
-        shootTeleop = new ShootTeleop(tshirtSolenoid, indexTeleop);
+        shootTeleop = new ShootTeleop(indexTeleop, dout);
         titanDriveParser = new TitanDriveParser(drive, shootTeleop, gunAim);
 
         drive.setDefaultCommand(titanDriveParser);

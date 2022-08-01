@@ -27,6 +27,9 @@ public class RobotMap {
     public static final int tilt = 6;
     public static final boolean tiltReverse = false;
 
+    //DigitalOutput
+    public static final int dout = 0;
+
     //Pneumatics
     public static final int PCM = 0;
     public static final int tshirtSolenoid = 0;
