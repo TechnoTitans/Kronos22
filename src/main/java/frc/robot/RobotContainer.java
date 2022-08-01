@@ -40,7 +40,7 @@ public class RobotContainer {
     //Commands
     public IndexTeleop indexTeleop;
     public ShootTeleop shootTeleop;
-    public TitanDriveTeleop titanDriveTeleop;
+    public TitanDriveParser titanDriveParser;
 
     public RobotContainer() {
         oi = new OI();
@@ -69,7 +69,10 @@ public class RobotContainer {
         // commands
         indexTeleop = new IndexTeleop(gun);
         shootTeleop = new ShootTeleop(tshirtSolenoid, indexTeleop);
-        titanDriveTeleop = new TitanDriveTeleop(drive, shootTeleop, gunAim);
+        titanDriveParser = new TitanDriveParser(drive, shootTeleop, gunAim);
+
+        drive.setDefaultCommand(titanDriveParser);
+        gunAim.setDefaultCommand(titanDriveParser);
 
         configureButtonBindings();
     }

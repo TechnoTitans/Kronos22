@@ -8,6 +8,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -19,7 +25,56 @@ public class Robot extends TimedRobot {
 
     private RobotContainer m_robotContainer;
 
-    private boolean isEnabled;
+    public static boolean isEnabled;
+
+    private Thread dsThread = new Thread(
+            () -> {
+                DatagramSocket socket;
+                try {
+                    socket = new DatagramSocket();
+                } catch (SocketException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                    return;
+                }
+                InetSocketAddress addr = new InetSocketAddress("127.0.0.1", 1110);
+                byte[] sendData = new byte[6];
+                DatagramPacket packet = new DatagramPacket(sendData, 0, 6, addr);
+                short sendCount = 0;
+                int initCount = 0;
+                while (!Thread.currentThread().isInterrupted()) {
+                    //either it == true or false needs to be tested
+                    if (isEnabled == false) {
+                        try {
+                            Thread.sleep(20);
+                            generateEnabledDsPacket(sendData, sendCount++);
+                            // ~50 disabled packets are required to make the robot actually enable
+                            // 1 is definitely not enough.
+                            if (initCount < 50) {
+                                initCount++;
+                                sendData[3] = 0;
+                            }
+                            packet.setData(sendData);
+                            socket.send(packet);
+                        } catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        } catch (IOException ex) {
+                            // TODO Auto-generated catch block
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+                socket.close();
+            });
+
+    private void generateEnabledDsPacket(byte[] data, short sendCount) {
+        data[0] = (byte) (sendCount >> 8);
+        data[1] = (byte) sendCount;
+        data[2] = 0x01; // general data tag
+        data[3] = 0x04; // teleop enabled
+        data[4] = 0x10; // normal data request
+        data[5] = 0x00; // red 1 station
+    }
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -32,10 +87,10 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
         m_robotContainer.tshirtSolenoid.set(false);
         m_robotContainer.gun.getBarrel().resetEncoder();
-        CommandScheduler.getInstance().enable();
 
         isEnabled = false;
-
+        dsThread.setDaemon(true);
+        dsThread.start();
     }
 
     /**
@@ -52,7 +107,7 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        if (!m_robotContainer.titanDriveTeleop.isDisabled() && isEnabled) {
+        if (!m_robotContainer.titanDriveParser.isDisabled() && isEnabled) {
             CommandScheduler.getInstance().enable();
             isEnabled = false;
         } else {
@@ -102,8 +157,6 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
         m_robotContainer.drive.brake();
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.titanDriveTeleop);
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.gunAim, m_robotContainer.titanDriveTeleop);
     }
 
     /**

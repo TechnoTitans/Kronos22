@@ -4,11 +4,12 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.BarrelTilt;
 import frc.robot.subsystems.JankDrive;
 
 
-public class TitanDriveTeleop extends CommandBase {
+public class TitanDriveParser extends CommandBase {
 
     private NetworkTableInstance inst;
     private NetworkTable table;
@@ -29,7 +30,7 @@ public class TitanDriveTeleop extends CommandBase {
     private final ShootTeleop shootTeleop;
     private final BarrelTilt barrelTilt;
 
-    public TitanDriveTeleop(JankDrive drive, ShootTeleop shootTeleop, BarrelTilt tilt) {
+    public TitanDriveParser(JankDrive drive, ShootTeleop shootTeleop, BarrelTilt tilt) {
         inst = NetworkTableInstance.getDefault();
 
         table = inst.getTable("titandrive");
@@ -61,11 +62,18 @@ public class TitanDriveTeleop extends CommandBase {
     @Override
     public void execute() {
 
-        xEntry.setDouble(x);
-        yEntry.setDouble(y);
-        angleEntry.setDouble(angle);
-        disableRobotEntry.setBoolean(disable);
-        shootEntry.setBoolean(shoot);
+        // This is one of many times karthik has had a brain fart
+//        xEntry.setDouble(x);
+//        yEntry.setDouble(y);
+//        angleEntry.setDouble(angle);
+//        disableRobotEntry.setBoolean(disable);
+//        shootEntry.setBoolean(shoot);
+
+        x = table.getEntry("x").getDouble(0);
+        y = table.getEntry("y").getDouble(0);
+        angle = table.getEntry("tiltangle").getDouble(0);
+        disable = table.getEntry("disabled").getBoolean(false);
+        shoot = table.getEntry("shoot").getBoolean(false);
 
         if (shoot) {
             shootTeleop.schedule();
@@ -76,6 +84,8 @@ public class TitanDriveTeleop extends CommandBase {
         this.drive.set(y + x, y - x);
 
         this.barrelTilt.set(angle);
+
+        Robot.isEnabled = disable;
 
     }
 
