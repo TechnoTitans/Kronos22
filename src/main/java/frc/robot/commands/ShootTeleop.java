@@ -20,9 +20,9 @@ public class ShootTeleop extends CommandBase {
 
     @Override
     public void initialize() {
-        //21 is min for solenoid but rio can output faster
         finished = false;
         timer.reset();
+        //21 is min for solenoid but rio can output faster
         dout.pulse(21);
         timer.start();
     }

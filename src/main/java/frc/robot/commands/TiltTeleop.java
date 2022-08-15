@@ -8,7 +8,7 @@ import java.util.function.DoubleSupplier;
 
 public class TiltTeleop extends CommandBase {
     private final BarrelTilt barrelTilt;
-    private final double SPEED = 1;
+    private final double SPEED = 0.3;
     private DoubleSupplier button;
 
     public TiltTeleop(BarrelTilt barrelTilt, DoubleSupplier button) {

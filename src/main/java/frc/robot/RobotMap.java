@@ -36,16 +36,16 @@ public class RobotMap {
 
     //Motors
     public static final int leftFront = 3;
-    public static final boolean leftFrontReverse = false;
+    public static final boolean leftFrontReverse = true;
 
     public static final int leftRear = 1;
-    public static final boolean leftRearReverse = false;
+    public static final boolean leftRearReverse = true;
 
     public static final int rightFront = 2;
-    public static final boolean rightFrontReverse = true;
+    public static final boolean rightFrontReverse = false;
 
     public static final int rightRear = 4;
-    public static final boolean rightRearReverse = true;
+    public static final boolean rightRearReverse = false;
 
     public static final int barrelEncoderA = 0;
     public static final int barrelEncoderB = 1;

@@ -11,7 +11,7 @@ public class DriveTeleop extends CommandBase {
     private DoubleSupplier leftInput, rightInput, steeringInput;
     private double steering, throttle;
 
-    private final double SENSITIVITY = 1;
+    private final double SENSITIVITY = 0.6;
 
     public DriveTeleop(JankDrive drive, DoubleSupplier leftInput, DoubleSupplier rightInput, DoubleSupplier steeringInput) {
         this.drive = drive;

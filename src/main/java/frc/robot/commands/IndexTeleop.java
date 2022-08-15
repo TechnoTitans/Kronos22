@@ -9,7 +9,7 @@ public class IndexTeleop extends CommandBase {
 
     private final Barrel barrel;
     private final Encoder encoder;
-    private final double SPEED = 1;
+    private final double SPEED = 0.3;
     private double error;
     private final double kP = 0.03;
     private PIDController pidController;

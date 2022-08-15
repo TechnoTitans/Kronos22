@@ -97,10 +97,10 @@ public class RobotContainer {
         indexButton.whenPressed(indexTeleop);
         shootButton.whenPressed(shootTeleop);
         compressorButton.whenPressed(new InstantCommand(() -> {
-            if (spikeMode == Relay.Value.kOn) {
+            if (spikeMode == Relay.Value.kForward) {
                 spikeMode = Relay.Value.kOff;
             } else {
-                spikeMode = Relay.Value.kOn;
+                spikeMode = Relay.Value.kForward;
             }
             spike.set(spikeMode);
         }));
