@@ -30,6 +30,8 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
         m_robotContainer.dout.set(false);
         m_robotContainer.gun.getBarrel().resetEncoder();
+        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
+        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.gunAim, m_robotContainer.tiltTeleop);
     }
 
     /**

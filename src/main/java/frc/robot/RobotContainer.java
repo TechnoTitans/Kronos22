@@ -66,7 +66,7 @@ public class RobotContainer {
         rightRear.follow(rightFront);
 
         drive = new JankDrive(leftFront, rightFront);
-        driveTeleop = new DriveTeleop(drive, oi.getXboxLeftTrigger(), oi.getXboxRightTrigger(), oi.getXboxLeftX());
+        driveTeleop = new DriveTeleop(drive, oi::getXboxLeftTrigger, oi::getXboxRightTrigger, oi::getXboxRightX);
 
         //Turret
         // Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
@@ -77,7 +77,9 @@ public class RobotContainer {
         gun = new Barrel(barrel);
         gunAim = new BarrelTilt(tilt);
 
-        dout = new DigitalOutput(0);
+        spike = new Relay(0);
+
+        dout = new DigitalOutput(2);
         dout.setPWMRate(10000);
 
         indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
@@ -85,7 +87,7 @@ public class RobotContainer {
         compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
 
         indexTeleop = new IndexTeleop(gun);
-        tiltTeleop = new TiltTeleop(gunAim, oi.getXboxPOV());
+        tiltTeleop = new TiltTeleop(gunAim, oi::getXboxPOV);
         shootTeleop = new ShootTeleop(dout, indexTeleop);
 
         configureButtonBindings();
