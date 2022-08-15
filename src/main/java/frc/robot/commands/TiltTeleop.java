@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BarrelTilt;
 
@@ -23,7 +22,6 @@ public class TiltTeleop extends CommandBase {
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("3214", button.getAsDouble());
         if (button.getAsDouble() == 0) {
             barrelTilt.set(SPEED);
         } else if (button.getAsDouble() == 180) {
