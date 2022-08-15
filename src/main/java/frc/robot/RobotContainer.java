@@ -4,10 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.DriveTeleop;
 import frc.robot.commands.IndexTeleop;
 import frc.robot.commands.ShootTeleop;
@@ -26,11 +27,17 @@ public class RobotContainer {
     public TitanSRX leftFront, leftRear, rightFront, rightRear;
     public TitanSRX barrel, tilt;
 
+    //Relay
+    public Relay spike;
+
+    //Value
+    Relay.Value spikeMode = Relay.Value.kOff;
+
     //Encoders
     public Encoder barrelEncoder;
 
-    //Solenoids
-    public Solenoid tshirtSolenoid;
+    //DigitalOutput
+    public DigitalOutput dout;
 
     //Subsystems
     public JankDrive drive;
@@ -38,7 +45,7 @@ public class RobotContainer {
     public BarrelTilt gunAim;
 
     //Buttons
-    public TitanButton indexButton, shootButton;
+    public TitanButton indexButton, shootButton, compressorButton;
 
     //Commands
     public DriveTeleop driveTeleop;
@@ -66,22 +73,36 @@ public class RobotContainer {
         barrelEncoder = new Encoder(RobotMap.barrelEncoderA, RobotMap.barrelEncoderB, RobotMap.barrelRevered, Encoder.EncodingType.k2X);
         barrel = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse, barrelEncoder);
         tilt = new TitanSRX(RobotMap.tilt, RobotMap.tiltReverse);
-        tshirtSolenoid = new Solenoid(RobotMap.PCM, PneumaticsModuleType.CTREPCM, RobotMap.tshirtSolenoid);
 
         gun = new Barrel(barrel);
         gunAim = new BarrelTilt(tilt);
 
+        dout = new DigitalOutput(0);
+        dout.setPWMRate(10000);
+
+        indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
+        shootButton = new TitanButton(oi.getXbox(), OI.XBOX_A);
+        compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
+
         indexTeleop = new IndexTeleop(gun);
         tiltTeleop = new TiltTeleop(gunAim, oi.getXboxPOV());
-        shootTeleop = new ShootTeleop(tshirtSolenoid, indexTeleop);
-
+        shootTeleop = new ShootTeleop(dout, indexTeleop);
 
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-//        indexButton.whenPressed(indexTeleop);
-//        shootButton.whenPressed(shootTeleop);
+        indexButton.whenPressed(indexTeleop);
+        shootButton.whenPressed(shootTeleop);
+        compressorButton.whenPressed(new InstantCommand(() -> {
+            if (spikeMode == Relay.Value.kOn) {
+                spikeMode = Relay.Value.kOff;
+            } else {
+                spikeMode = Relay.Value.kOn;
+            }
+            spike.set(spikeMode);
+        }));
+
     }
 
     public Command getAutonomousCommand() {

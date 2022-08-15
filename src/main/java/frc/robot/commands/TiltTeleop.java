@@ -16,8 +16,8 @@ public class TiltTeleop extends CommandBase {
 
     @Override
     public void initialize() {
-        barrelTilt.getTilt().brake();
-        barrelTilt.set(SPEED);
+//        barrelTilt.getTilt().brake();
+//        barrelTilt.set(SPEED);
     }
 
     @Override

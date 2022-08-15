@@ -13,6 +13,7 @@ public class IndexTeleop extends CommandBase {
     private double error;
     private final double kP = 0.03;
     private PIDController pidController;
+    private final byte mor = 5;
 
     public IndexTeleop(Barrel barrel) {
         this.barrel = barrel;
@@ -22,7 +23,7 @@ public class IndexTeleop extends CommandBase {
 
     @Override
     public void initialize() {
-        barrel.getBarrel().brake();
+//        barrel.getBarrel().brake();
         pidController = new PIDController(kP, 0, 0);
         barrel.set(SPEED);
     }
@@ -40,7 +41,7 @@ public class IndexTeleop extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return error <= mor && error >= -mor;
     }
 
 }
