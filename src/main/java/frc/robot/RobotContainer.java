@@ -25,7 +25,7 @@ public class RobotContainer {
 
     //Motors
     public TitanSRX leftFront, leftRear, rightFront, rightRear;
-    public TitanSRX barrel, tilt;
+    public TitanSRX barrel, tiltMotor;
 
     //Relay
     public Relay spike;
@@ -76,11 +76,11 @@ public class RobotContainer {
         barrel.brake();
 
         //Tilt motor
-        tilt = new TitanSRX(RobotMap.tilt, RobotMap.tiltReverse);
-        tilt.coast();
+        tiltMotor = new TitanSRX(RobotMap.tilt, RobotMap.tiltReverse);
+        tiltMotor.coast();
 
         gun = new Barrel(barrel);
-        gunAim = new BarrelTilt(tilt);
+        gunAim = new BarrelTilt(tiltMotor);
 
         //Set channel for Spike (compressor toggle)
         spike = new Relay(0);

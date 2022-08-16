@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
 
     private RobotContainer m_robotContainer;
 
-    public static double shoot_delay = 25;
+    public static double shoot_delay = 70;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -33,7 +33,8 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
         m_robotContainer.dout.set(false);
         m_robotContainer.gun.getBarrel().resetEncoder();
-        SmartDashboard.putNumber("ShootTime", 25);
+        m_robotContainer.drive.coast();
+        SmartDashboard.putNumber("ShootTime", 70);
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.gunAim, m_robotContainer.tiltTeleop);
     }
@@ -53,7 +54,7 @@ public class Robot extends TimedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
-        shoot_delay = SmartDashboard.getNumber("ShootTime", 25);
+        shoot_delay = SmartDashboard.getNumber("ShootTime", 70);
         if (shoot_delay < 25) {
             SmartDashboard.putNumber("ShootTime", 25);
             shoot_delay = 25;
@@ -65,6 +66,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        m_robotContainer.drive.coast();
     }
 
     @Override
@@ -102,6 +104,7 @@ public class Robot extends TimedRobot {
         }
         m_robotContainer.drive.brake();
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
+        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.gunAim, m_robotContainer.tiltTeleop);
     }
 
     /**
@@ -115,7 +118,6 @@ public class Robot extends TimedRobot {
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
-        m_robotContainer.drive.coast();
     }
 
     /**

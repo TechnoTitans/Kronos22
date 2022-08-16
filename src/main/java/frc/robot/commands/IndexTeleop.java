@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Barrel;
 
@@ -10,7 +11,7 @@ public class IndexTeleop extends CommandBase {
     private final Barrel barrel;
     private final Encoder encoder;
     private double error;
-    private final double kP = 0.03;
+    private final double kP = 0.5;
     private PIDController pidController;
     private final byte mor = 5;
 
@@ -28,6 +29,7 @@ public class IndexTeleop extends CommandBase {
 
     @Override
     public void execute() {
+        SmartDashboard.putData("enc", encoder);
         error = barrel.DISTANCE - encoder.getRaw();
         barrel.set(pidController.calculate(error));
     }

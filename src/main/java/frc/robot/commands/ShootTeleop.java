@@ -35,7 +35,7 @@ public class ShootTeleop extends CommandBase {
     @Override
     public void execute() {
         if (timer.hasElapsed(2)) {
-            CommandScheduler.getInstance().schedule(indexTeleop);
+//            CommandScheduler.getInstance().schedule(indexTeleop);
             finished = true;
         }
     }
