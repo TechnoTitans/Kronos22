@@ -73,6 +73,7 @@ public class RobotContainer {
         // Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
         barrelEncoder = new Encoder(RobotMap.barrelEncoderA, RobotMap.barrelEncoderB, RobotMap.barrelRevered, Encoder.EncodingType.k2X);
         barrel = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse, barrelEncoder);
+        barrel.brake();
 
         //Tilt motor
         tilt = new TitanSRX(RobotMap.tilt, RobotMap.tiltReverse);
