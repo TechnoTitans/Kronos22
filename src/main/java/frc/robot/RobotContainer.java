@@ -74,6 +74,7 @@ public class RobotContainer {
         barrelEncoder = new Encoder(RobotMap.barrelEncoderA, RobotMap.barrelEncoderB, RobotMap.barrelRevered, Encoder.EncodingType.k2X);
         barrel = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse, barrelEncoder);
         barrel.brake();
+        barrelEncoder.reset();
 
         //Tilt motor
         tiltMotor = new TitanSRX(RobotMap.tilt, RobotMap.tiltReverse);

@@ -11,9 +11,10 @@ public class IndexTeleop extends CommandBase {
     private final Barrel barrel;
     private final Encoder encoder;
     private double error;
-    private final double kP = 0.5;
+    private final double kP = 0.01;
     private PIDController pidController;
-    private final byte mor = 5;
+    private final int mor = 5;
+    private int counter = 0;
 
     public IndexTeleop(Barrel barrel) {
         this.barrel = barrel;
@@ -24,24 +25,30 @@ public class IndexTeleop extends CommandBase {
     @Override
     public void initialize() {
 //        barrel.getBarrel().brake();
+        counter++;
         pidController = new PIDController(kP, 0, 0);
+        encoder.reset();
     }
 
     @Override
     public void execute() {
         SmartDashboard.putData("enc", encoder);
-        error = barrel.DISTANCE - encoder.getRaw();
-        barrel.set(pidController.calculate(error));
+        SmartDashboard.putNumber("enc raw1", encoder.getDistance());
+        SmartDashboard.putNumber("enc raw", encoder.getRaw());
+        error = (barrel.DISTANCE*counter) - encoder.getRaw();
+        barrel.set(-1);
     }
 
     @Override
     public void end(boolean interrupted) {
         barrel.getBarrel().stop();
+        counter++;
     }
 
     @Override
     public boolean isFinished() {
-        return error <= mor && error >= -mor;
+//        return error <= mor && error >= -mor;
+        return false;
     }
 
 }

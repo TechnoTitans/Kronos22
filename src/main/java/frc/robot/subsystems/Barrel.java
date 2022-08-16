@@ -10,7 +10,10 @@ public class Barrel extends SubsystemBase {
     private final Encoder barrelEncoder;
 
     // travel distance
-    public static final int DISTANCE = 420;
+    public static final double gear1 = 18;
+    public static final double gear2 = 23;
+    public static final double pulseperrev = 420;
+    public static final double DISTANCE = (pulseperrev * (gear2/gear1)) / 6;
 
     public Barrel(TitanSRX barrel) {
         this.barrel = barrel;
