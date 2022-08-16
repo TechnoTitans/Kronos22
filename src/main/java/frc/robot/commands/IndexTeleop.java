@@ -23,7 +23,7 @@ public class IndexTeleop extends CommandBase {
 
     @Override
     public void initialize() {
-//        barrel.getBarrel().brake();
+        barrel.getBarrel().brake();
         pidController = new PIDController(kP, 0, 0);
         barrel.set(SPEED);
     }

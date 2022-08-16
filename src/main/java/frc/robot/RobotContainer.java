@@ -56,7 +56,7 @@ public class RobotContainer {
     public RobotContainer() {
         oi = new OI();
 
-        //Drivetrain
+        //Drivetrain Motors
         leftFront = new TitanSRX(RobotMap.leftFront, RobotMap.leftFrontReverse);
         leftRear = new TitanSRX(RobotMap.leftRear, RobotMap.leftRearReverse);
         rightFront = new TitanSRX(RobotMap.rightFront, RobotMap.rightFrontReverse);
@@ -65,6 +65,7 @@ public class RobotContainer {
         leftRear.follow(leftFront);
         rightRear.follow(rightFront);
 
+        //DriveTrain stuff
         drive = new JankDrive(leftFront, rightFront);
         driveTeleop = new DriveTeleop(drive, oi::getXboxLeftTrigger, oi::getXboxRightTrigger, oi::getXboxRightX);
 
@@ -72,20 +73,30 @@ public class RobotContainer {
         // Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
         barrelEncoder = new Encoder(RobotMap.barrelEncoderA, RobotMap.barrelEncoderB, RobotMap.barrelRevered, Encoder.EncodingType.k2X);
         barrel = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse, barrelEncoder);
+
+        //Tilt motor
         tilt = new TitanSRX(RobotMap.tilt, RobotMap.tiltReverse);
+        tilt.coast();
 
         gun = new Barrel(barrel);
         gunAim = new BarrelTilt(tilt);
 
+        //Set channel for Spike (compressor toggle)
         spike = new Relay(0);
 
+        //Create DigitalOutput (Shooting)
         dout = new DigitalOutput(2);
+        //Set PWM rate or it won't pulse right length
         dout.setPWMRate(10000);
 
+        //Index Barrel
         indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
+        //Shoot
         shootButton = new TitanButton(oi.getXbox(), OI.XBOX_A);
+        //Toggle Compressor
         compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
 
+        //Teleop commands
         indexTeleop = new IndexTeleop(gun);
         tiltTeleop = new TiltTeleop(gunAim, oi::getXboxPOV);
         shootTeleop = new ShootTeleop(dout, indexTeleop);
@@ -97,11 +108,7 @@ public class RobotContainer {
         indexButton.whenPressed(indexTeleop);
         shootButton.whenPressed(shootTeleop);
         compressorButton.whenPressed(new InstantCommand(() -> {
-            if (spikeMode == Relay.Value.kForward) {
-                spikeMode = Relay.Value.kOff;
-            } else {
-                spikeMode = Relay.Value.kForward;
-            }
+            spikeMode = spikeMode == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;
             spike.set(spikeMode);
         }));
 

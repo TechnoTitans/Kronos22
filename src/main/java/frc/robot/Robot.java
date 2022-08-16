@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -19,6 +20,8 @@ public class Robot extends TimedRobot {
 
     private RobotContainer m_robotContainer;
 
+    public static double shoot_delay = 25;
+
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
@@ -30,6 +33,7 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
         m_robotContainer.dout.set(false);
         m_robotContainer.gun.getBarrel().resetEncoder();
+        SmartDashboard.putNumber("ShootTime", 25);
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.gunAim, m_robotContainer.tiltTeleop);
     }
@@ -48,6 +52,12 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+
+        shoot_delay = SmartDashboard.getNumber("ShootTime", 25);
+        if (shoot_delay < 25) {
+            SmartDashboard.putNumber("ShootTime", 25);
+            shoot_delay = 25;
+        }
     }
 
     /**
