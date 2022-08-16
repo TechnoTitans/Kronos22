@@ -25,4 +25,14 @@ public class TitanButton extends JoystickButton {
         return this.get();
     }
 
+    public void rumble(double intensity) {
+        hid.setRumble(GenericHID.RumbleType.kLeftRumble, intensity);
+        hid.setRumble(GenericHID.RumbleType.kRightRumble, intensity);
+    }
+
+    public void stopRumble() {
+        hid.setRumble(GenericHID.RumbleType.kLeftRumble, 0);
+        hid.setRumble(GenericHID.RumbleType.kRightRumble, 0);
+    }
+
 }

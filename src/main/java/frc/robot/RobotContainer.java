@@ -99,7 +99,7 @@ public class RobotContainer {
         //Teleop commands
         indexTeleop = new IndexTeleop(gun);
         tiltTeleop = new TiltTeleop(gunAim, oi::getXboxPOV);
-        shootTeleop = new ShootTeleop(dout, indexTeleop);
+        shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
 
         configureButtonBindings();
     }
