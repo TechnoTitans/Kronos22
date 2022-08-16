@@ -23,11 +23,13 @@ public class ShootTeleop extends CommandBase {
 
     @Override
     public void initialize() {
-        //21 is min for solenoid but rio can output faster
-        btn.rumble(1);
-        timer.reset();
-        timer.start();
-        dout.pulse(Robot.shoot_delay);
+        if (!dout.isPulsing()) {
+            //21 is min for solenoid but rio can output faster
+            btn.rumble(0.5);
+            timer.reset();
+            timer.start();
+            dout.pulse(Robot.shoot_delay);
+        }
     }
 
     @Override
