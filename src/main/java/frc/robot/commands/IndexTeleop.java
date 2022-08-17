@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Barrel;
@@ -10,45 +11,40 @@ public class IndexTeleop extends CommandBase {
 
     private final Barrel barrel;
     private final Encoder encoder;
-    private double error;
-    private final double kP = 0.01;
-    private PIDController pidController;
     private final int mor = 5;
-    private int counter = 0;
+    private Timer timer;
 
     public IndexTeleop(Barrel barrel) {
         this.barrel = barrel;
         this.encoder = barrel.getBarrelEncoder();
+        timer = new Timer();
         addRequirements(barrel);
     }
 
     @Override
     public void initialize() {
-//        barrel.getBarrel().brake();
-        counter++;
-        pidController = new PIDController(kP, 0, 0);
         encoder.reset();
+        timer.reset();
+        timer.start();
+        barrel.set(-1);
     }
 
     @Override
     public void execute() {
-        SmartDashboard.putData("enc", encoder);
-        SmartDashboard.putNumber("enc raw1", encoder.getDistance());
-        SmartDashboard.putNumber("enc raw", encoder.getRaw());
-        error = (barrel.DISTANCE*counter) - encoder.getRaw();
-        barrel.set(-1);
+        if (timer.hasElapsed(2)) {
+            barrel.set(0);
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
         barrel.getBarrel().stop();
-        counter++;
     }
 
     @Override
     public boolean isFinished() {
-//        return error <= mor && error >= -mor;
-        return false;
+        double distance = encoder.getDistance();
+        return distance <= (distance+mor) && distance >= -(distance+mor);
     }
 
 }
