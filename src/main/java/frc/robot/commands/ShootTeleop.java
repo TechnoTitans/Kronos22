@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
@@ -25,9 +26,10 @@ public class ShootTeleop extends CommandBase {
     public void initialize() {
         if (!dout.isPulsing()) {
             //21 is min for solenoid but rio can output faster
-            btn.rumble(0.5);
+            btn.rumble(0.3);
             timer.reset();
             timer.start();
+            SmartDashboard.putNumber("actual delay", Robot.shoot_delay);
             dout.pulse(Robot.shoot_delay);
         }
     }
@@ -35,7 +37,7 @@ public class ShootTeleop extends CommandBase {
     @Override
     public void execute() {
         if (timer.hasElapsed(1)) {
-            CommandScheduler.getInstance().schedule(indexTeleop);
+//            CommandScheduler.getInstance().schedule(indexTeleop);
             finished = true;
         }
     }

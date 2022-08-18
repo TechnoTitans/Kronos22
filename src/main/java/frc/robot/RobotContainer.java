@@ -46,11 +46,12 @@ public class RobotContainer {
     public BarrelTilt gunAim;
 
     //Buttons
-    public TitanButton indexButton, shootButton, compressorButton;
+    public TitanButton indexGoButton, indexBackButton, shootButton, compressorButton;
 
     //Commands
     public DriveTeleop driveTeleop;
-    public IndexTeleop indexTeleop;
+    public IndexTeleop indexGoTeleop;
+    public IndexTeleop indexBackTeleop;
     public TiltTeleop tiltTeleop;
     public ShootTeleop shootTeleop;
 
@@ -93,22 +94,25 @@ public class RobotContainer {
         dout.setPWMRate(10000); //Random Value
 
         //Index Barrel
-        indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
+        indexGoButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
+        indexBackButton = new TitanButton(oi.getXbox(), OI.XBOX_X);
         //Shoot
         shootButton = new TitanButton(oi.getXbox(), OI.XBOX_A);
         //Toggle Compressor
         compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
 
         //Teleop commands
-        indexTeleop = new IndexTeleop(gun);
+        indexGoTeleop = new IndexTeleop(gun, 0);
+        indexBackTeleop = new IndexTeleop(gun, 1);
         tiltTeleop = new TiltTeleop(gunAim, oi::getXboxPOV);
-        shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
+        shootTeleop = new ShootTeleop(dout, indexGoTeleop, shootButton);
 
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-        indexButton.whenPressed(indexTeleop);
+        indexGoButton.whenHeld(indexGoTeleop);
+        indexBackButton.whenHeld(indexBackTeleop);
         shootButton.whenPressed(shootTeleop);
         compressorButton.whenPressed(new InstantCommand(() -> {
             spikeMode = spikeMode == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;

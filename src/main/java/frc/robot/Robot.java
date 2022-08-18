@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
 
     private RobotContainer m_robotContainer;
 
-    public static double shoot_delay = 70;
+    public static double shoot_delay = 40;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
         m_robotContainer.dout.set(false);
         m_robotContainer.gun.getBarrel().resetEncoder();
         m_robotContainer.drive.coast();
-        SmartDashboard.putNumber("ShootTime", 70);
+        SmartDashboard.putNumber("ShootTime", 40);
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.gunAim, m_robotContainer.tiltTeleop);
     }
@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
-        shoot_delay = SmartDashboard.getNumber("ShootTime", 70);
+        shoot_delay = SmartDashboard.getNumber("ShootTime", 40);
         if (shoot_delay < 25) {
             SmartDashboard.putNumber("ShootTime", 25);
             shoot_delay = 25;

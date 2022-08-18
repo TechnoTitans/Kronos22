@@ -9,39 +9,39 @@ public class IndexTeleop extends CommandBase {
 
     private final Barrel barrel;
     private final Encoder encoder;
-    private Timer timer;
     private boolean finished = false;
+    private final int direction;
 
-    public IndexTeleop(Barrel barrel) {
+    public IndexTeleop(Barrel barrel, int direction) {
         this.barrel = barrel;
         this.encoder = barrel.getBarrelEncoder();
-        timer = new Timer();
         encoder.reset();
+        this.direction = direction;
         addRequirements(barrel);
     }
 
     @Override
     public void initialize() {
-        barrel.set(-1);
-        timer.reset();
-        timer.start();
+        if (direction == 0) {
+            barrel.set(-0.5);
+        } else if (direction == 1){
+            barrel.set(0.5);
+        } else {
+            barrel.set(0.5);
+        }
     }
 
     @Override
     public void execute() {
-        if (timer.hasElapsed(0.3)) {
-            finished = true;
-        }
     }
 
     @Override
     public void end(boolean interrupted) {
         barrel.set(0);
-        finished = false;
     }
 
     @Override
     public boolean isFinished() {
-        return finished;
+        return false;
     }
 }

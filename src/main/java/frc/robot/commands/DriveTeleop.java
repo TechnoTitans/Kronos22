@@ -28,6 +28,7 @@ public class DriveTeleop extends CommandBase {
     public void execute() {
         // Remove drift from controller
         steering = steeringInput.getAsDouble() > -0.25 && steeringInput.getAsDouble() < 0.25 ? 0 : steeringInput.getAsDouble();
+        steering *= 0.7;
         throttle = leftInput.getAsDouble() - rightInput.getAsDouble();
         drive.set((throttle - steering) * SENSITIVITY, (throttle + steering) * SENSITIVITY);
     }
