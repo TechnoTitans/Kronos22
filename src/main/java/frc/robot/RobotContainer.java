@@ -71,7 +71,7 @@ public class RobotContainer {
         driveTeleop = new DriveTeleop(drive, oi::getXboxLeftTrigger, oi::getXboxRightTrigger, oi::getXboxRightX);
 
         //Turret
-        // Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
+        //Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
         barrelEncoder = new Encoder(RobotMap.barrelEncoderA, RobotMap.barrelEncoderB, RobotMap.barrelRevered, Encoder.EncodingType.k2X);
         barrel = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse, barrelEncoder);
         barrel.brake();
@@ -90,7 +90,7 @@ public class RobotContainer {
         //Create DigitalOutput (Shooting)
         dout = new DigitalOutput(2);
         //Set PWM rate or it won't pulse right length
-        dout.setPWMRate(10000);
+        dout.setPWMRate(10000); //Random Value
 
         //Index Barrel
         indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
