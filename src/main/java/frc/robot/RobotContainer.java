@@ -5,10 +5,7 @@
 package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
-import edu.wpi.first.wpilibj.DigitalOutput;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.DriveTeleop;
@@ -32,14 +29,11 @@ public class RobotContainer {
     //Relay
     public Relay spike;
 
+    //ColorSensor
+    public ColorSensorV3 colorSensor;
+
     //Value
     Relay.Value spikeMode = Relay.Value.kOff;
-
-    //Encoders
-    public Encoder barrelEncoder;
-
-    //Rev Color Sensor
-    public ColorSensorV3 colorSensor;
 
     //DigitalOutput
     public DigitalOutput dout;
@@ -76,14 +70,12 @@ public class RobotContainer {
 
         //Turret
         //Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
-        barrelEncoder = new Encoder(RobotMap.barrelEncoderA, RobotMap.barrelEncoderB, RobotMap.barrelRevered, Encoder.EncodingType.k2X);
-        barrelMotor = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse, barrelEncoder);
-        barrelMotor.coast(); // maybe this will reduce some strain on the motor
-        barrelEncoder.reset();
+        barrelMotor = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse);
+        barrelMotor.coast();
 
         //Tilt motor
         tiltMotor = new TitanSRX(RobotMap.tilt, RobotMap.tiltReverse);
-        tiltMotor.coast(); // cuz worm gear no need to send constant brake power
+        tiltMotor.coast();
 
         barrel = new Barrel(barrelMotor);
         barrelTilt = new BarrelTilt(tiltMotor);
@@ -103,12 +95,14 @@ public class RobotContainer {
         //Toggle Compressor
         compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
 
+        //ColorSensor
+        colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+
         //Teleop commands
-        indexTeleop = new IndexTeleop(barrel);
+        indexTeleop = new IndexTeleop(barrel, colorSensor);
         tiltTeleop = new TiltTeleop(barrelTilt, oi::getXboxPOV);
         shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
-        
-        colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+
 
         configureButtonBindings();
     }

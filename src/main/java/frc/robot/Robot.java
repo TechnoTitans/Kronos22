@@ -60,7 +60,8 @@ public class Robot extends TimedRobot {
             shoot_delay = 25;
         }
 
-        SmartDashboard.putNumber("dist", m_robotContainer.colorSensor.getProximity());
+        SmartDashboard.putNumber("color", m_robotContainer.colorSensor.getColor().red);
+        SmartDashboard.putNumber("nav", m_robotContainer.navx.getRotation2d().getDegrees());
 
     }
 
