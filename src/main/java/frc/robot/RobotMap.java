@@ -32,7 +32,7 @@ package frc.robot;
 
 public class RobotMap {
     //Controllers
-    public static final int Controller = 0;
+    public static final int Controller = 2;
 
     //Motors
     public static final int leftFront = 3;
