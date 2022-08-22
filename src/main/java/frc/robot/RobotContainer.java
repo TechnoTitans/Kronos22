@@ -4,9 +4,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.CounterBase;
+import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -26,7 +27,7 @@ public class RobotContainer {
 
     //Motors
     public TitanSRX leftFront, leftRear, rightFront, rightRear;
-    public TitanSRX barrel, tiltMotor;
+    public TitanSRX barrelMotor, tiltMotor;
 
     //Relay
     public Relay spike;
@@ -37,13 +38,16 @@ public class RobotContainer {
     //Encoders
     public Encoder barrelEncoder;
 
+    //Rev Color Sensor
+    public ColorSensorV3 colorSensor;
+
     //DigitalOutput
     public DigitalOutput dout;
 
     //Subsystems
     public JankDrive drive;
-    public Barrel gun;
-    public BarrelTilt gunAim;
+    public Barrel barrel;
+    public BarrelTilt barrelTilt;
 
     //Buttons
     public TitanButton indexButton, shootButton, compressorButton;
@@ -73,16 +77,16 @@ public class RobotContainer {
         //Turret
         //Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
         barrelEncoder = new Encoder(RobotMap.barrelEncoderA, RobotMap.barrelEncoderB, RobotMap.barrelRevered, Encoder.EncodingType.k2X);
-        barrel = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse, barrelEncoder);
-        barrel.brake();
+        barrelMotor = new TitanSRX(RobotMap.barrel, RobotMap.barrelReverse, barrelEncoder);
+        barrelMotor.coast(); // maybe this will reduce some strain on the motor
         barrelEncoder.reset();
 
         //Tilt motor
         tiltMotor = new TitanSRX(RobotMap.tilt, RobotMap.tiltReverse);
-        tiltMotor.coast();
+        tiltMotor.coast(); // cuz worm gear no need to send constant brake power
 
-        gun = new Barrel(barrel);
-        gunAim = new BarrelTilt(tiltMotor);
+        barrel = new Barrel(barrelMotor);
+        barrelTilt = new BarrelTilt(tiltMotor);
 
         //Set channel for Spike (compressor toggle)
         spike = new Relay(0);
@@ -100,9 +104,11 @@ public class RobotContainer {
         compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
 
         //Teleop commands
-        indexTeleop = new IndexTeleop(gun);
-        tiltTeleop = new TiltTeleop(gunAim, oi::getXboxPOV);
+        indexTeleop = new IndexTeleop(barrel);
+        tiltTeleop = new TiltTeleop(barrelTilt, oi::getXboxPOV);
         shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
+        
+        colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
         configureButtonBindings();
     }

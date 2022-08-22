@@ -32,11 +32,11 @@ public class Robot extends TimedRobot {
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
         m_robotContainer.dout.set(false);
-        m_robotContainer.gun.getBarrel().resetEncoder();
+        m_robotContainer.barrel.getBarrel().resetEncoder();
         m_robotContainer.drive.coast();
         SmartDashboard.putNumber("ShootTime", 70);
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.gunAim, m_robotContainer.tiltTeleop);
+        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
     }
 
     /**
@@ -59,6 +59,9 @@ public class Robot extends TimedRobot {
             SmartDashboard.putNumber("ShootTime", 25);
             shoot_delay = 25;
         }
+
+        SmartDashboard.putNumber("dist", m_robotContainer.colorSensor.getProximity());
+
     }
 
     /**
@@ -104,7 +107,7 @@ public class Robot extends TimedRobot {
         }
         m_robotContainer.drive.brake();
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.gunAim, m_robotContainer.tiltTeleop);
+        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
     }
 
     /**
@@ -112,6 +115,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        SmartDashboard.putBoolean("bool", m_robotContainer.colorSensor.isConnected());
     }
 
     @Override

@@ -24,7 +24,6 @@
 //
 //    @Override
 //    public void initialize() {
-////        barrel.getBarrel().brake();
 //        counter++;
 //        pidController = new PIDController(kP, 0, 0);
 //        encoder.reset();
