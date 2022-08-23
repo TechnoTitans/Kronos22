@@ -5,7 +5,9 @@
 package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.DriveTeleop;
@@ -111,7 +113,7 @@ public class RobotContainer {
         indexButton.whenPressed(indexTeleop);
         shootButton.whenPressed(shootTeleop);
         compressorButton.whenPressed(new InstantCommand(() -> {
-            spikeMode = spikeMode == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;
+            spikeMode = spike.get() == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;
             spike.set(spikeMode);
         }));
 

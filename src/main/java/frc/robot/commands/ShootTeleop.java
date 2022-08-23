@@ -37,7 +37,7 @@ public class ShootTeleop extends CommandBase {
     @Override
     public void execute() {
         if (timer.hasElapsed(1)) {
-//            CommandScheduler.getInstance().schedule(indexTeleop);
+            CommandScheduler.getInstance().schedule(indexTeleop); //turns barrel after shot
             finished = true;
         }
     }

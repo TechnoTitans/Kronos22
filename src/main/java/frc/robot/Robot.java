@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -61,7 +62,6 @@ public class Robot extends TimedRobot {
         }
 
         SmartDashboard.putNumber("color", m_robotContainer.colorSensor.getColor().red);
-        SmartDashboard.putNumber("nav", m_robotContainer.navx.getRotation2d().getDegrees());
 
     }
 
@@ -71,6 +71,7 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         m_robotContainer.drive.coast();
+        m_robotContainer.spike.set(Relay.Value.kOff);
     }
 
     @Override
@@ -123,6 +124,8 @@ public class Robot extends TimedRobot {
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
+        m_robotContainer.spike.set(Relay.Value.kForward);
+
     }
 
     /**
