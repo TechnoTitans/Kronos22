@@ -8,6 +8,7 @@ import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.DriveTeleop;
@@ -21,9 +22,6 @@ import frc.robot.subsystems.JankDrive;
 import frc.robot.utils.TitanButton;
 
 public class RobotContainer {
-    //OI
-    public OI oi;
-
     //Motors
     public TitanSRX leftFront, leftRear, rightFront, rightRear;
     public TitanSRX barrelMotor, tiltMotor;
@@ -54,8 +52,9 @@ public class RobotContainer {
     public TiltTeleop tiltTeleop;
     public ShootTeleop shootTeleop;
 
+    public XboxController xbox;
+
     public RobotContainer() {
-        oi = new OI();
 
         //Drivetrain Motors
         leftFront = new TitanSRX(RobotMap.leftFront, RobotMap.leftFrontReverse);
@@ -66,9 +65,12 @@ public class RobotContainer {
         leftRear.follow(leftFront);
         rightRear.follow(rightFront);
 
+        //Xbox Controller
+        xbox = new XboxController(RobotMap.Controller);
+
         //DriveTrain stuff
         drive = new JankDrive(leftFront, rightFront);
-        driveTeleop = new DriveTeleop(drive, oi::getXboxLeftTrigger, oi::getXboxRightTrigger, oi::getXboxRightX);
+        driveTeleop = new DriveTeleop(drive, OI.getXboxLeftTrigger(xbox), OI.getXboxRightTrigger(xbox), OI.getXboxRightX(xbox));
 
         //Turret
         //Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
@@ -91,18 +93,18 @@ public class RobotContainer {
         dout.setPWMRate(10000); //Random Value
 
         //Index Barrel
-        indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
+        indexButton = new TitanButton(xbox, OI.XBOX_B);
         //Shoot
-        shootButton = new TitanButton(oi.getXbox(), OI.XBOX_A);
+        shootButton = new TitanButton(xbox, OI.XBOX_A);
         //Toggle Compressor
-        compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
+        compressorButton = new TitanButton(xbox, OI.XBOX_Y);
 
         //ColorSensor
         colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
 
         //Teleop commands
         indexTeleop = new IndexTeleop(barrel, colorSensor);
-        tiltTeleop = new TiltTeleop(barrelTilt, oi::getXboxPOV);
+        tiltTeleop = new TiltTeleop(barrelTilt, OI.getXboxPOV(xbox));
         shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
 
 

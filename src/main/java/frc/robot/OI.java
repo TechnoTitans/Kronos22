@@ -12,41 +12,31 @@ public class OI {
     public static final int XBOX_BTN_SELECT = 7;
     public static final int XBOX_BTN_START = 8;
 
-    private XboxController xbox;
-
-    public OI() {
-        this.xbox = new XboxController(RobotMap.Controller);
+    public static double getXboxLeftY(XboxController xbox) {
+        return -xbox.getLeftY();
     }
 
-    public double getXboxLeftY() {
-        return -this.xbox.getLeftY();
+    public static double getXboxLeftX(XboxController xbox) {
+        return -xbox.getLeftX();
     }
 
-    public double getXboxLeftX() {
-        return -this.xbox.getLeftX();
+    public static double getXboxRightY(XboxController xbox) {
+        return xbox.getRightY();
     }
 
-    public double getXboxRightY() {
-        return this.xbox.getRightY();
+    public static double getXboxRightX(XboxController xbox) {
+        return xbox.getRightX();
     }
 
-    public double getXboxRightX() {
-        return this.xbox.getRightX();
+    public static double getXboxLeftTrigger(XboxController xbox) {
+        return xbox.getLeftTriggerAxis();
     }
 
-    public double getXboxLeftTrigger() {
-        return this.xbox.getLeftTriggerAxis();
+    public static double getXboxRightTrigger(XboxController xbox) {
+        return xbox.getRightTriggerAxis();
     }
 
-    public double getXboxRightTrigger() {
-        return this.xbox.getRightTriggerAxis();
-    }
-
-    public int getXboxPOV() {
-        return this.xbox.getPOV();
-    }
-
-    public XboxController getXbox() {
-        return this.xbox;
+    public static int getXboxPOV(XboxController xbox) {
+        return xbox.getPOV();
     }
 }

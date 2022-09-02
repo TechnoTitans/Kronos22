@@ -3,14 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BarrelTilt;
 
-import java.util.function.DoubleSupplier;
-
 public class TiltTeleop extends CommandBase {
     private final BarrelTilt barrelTilt;
     private final double SPEED = 0.45;
-    private DoubleSupplier button;
+    private int button;
 
-    public TiltTeleop(BarrelTilt barrelTilt, DoubleSupplier button) {
+    public TiltTeleop(BarrelTilt barrelTilt, int button) {
         this.barrelTilt = barrelTilt;
         this.button = button;
         addRequirements(barrelTilt);
@@ -21,10 +19,10 @@ public class TiltTeleop extends CommandBase {
 
     @Override
     public void execute() {
-        if (button.getAsDouble() == 0) {
+        if (button == 0) {
             barrelTilt.set(SPEED);
-        } else if (button.getAsDouble() == 180) {
-            barrelTilt.set(-SPEED*0.5);
+        } else if (button == 180) {
+            barrelTilt.set(-SPEED*0.5); // We slow down because when it's going down gravity helps it go faster but faster is too fast.
         } else {
             barrelTilt.set(0);
         }
