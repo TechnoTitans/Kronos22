@@ -19,10 +19,12 @@ import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.BarrelTilt;
 import frc.robot.subsystems.JankDrive;
 import frc.robot.utils.TitanButton;
+import frc.robot.utils.TitanDS;
 
 public class RobotContainer {
     //OI
     public OI oi;
+    public TitanDS titanDS;
 
     //Motors
     public TitanSRX leftFront, leftRear, rightFront, rightRear;
@@ -68,7 +70,7 @@ public class RobotContainer {
 
         //DriveTrain stuff
         drive = new JankDrive(leftFront, rightFront);
-        driveTeleop = new DriveTeleop(drive, oi::getXboxLeftTrigger, oi::getXboxRightTrigger, oi::getXboxRightX);
+//        driveTeleop = new DriveTeleop(drive, oi::getXboxLeftTrigger, oi::getXboxRightTrigger, oi::getXboxRightX);
 
         //Turret
         //Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
@@ -105,6 +107,9 @@ public class RobotContainer {
         tiltTeleop = new TiltTeleop(barrelTilt, oi::getXboxPOV);
         shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
 
+
+        //TitanDS
+        titanDS = new TitanDS(drive, barrel);
 
         configureButtonBindings();
     }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>TitanDrive</title>
+
+        <link href="content/css/bootstrap.min.css" rel="stylesheet">
+        <link href="content/css/main.css" rel="stylesheet">
+
+        <script src="content/js/bootstrap.bundle.min.js"></script>
+        <script src="content/js/jquery.js"></script>
+        <script src="content/js/main.js"></script>
+    </head>
+
+    <body id="body" scroll="no">
+        <div class="contents">
+            <div class="col-md-6 quarter tl">
+                <h1 style="font-size: 70px;"><b><u>TitanDrive</u></b></h1>
+            </div>
+
+            <div class="col-md-6 quarter tr">
+                <button type="button" class="btn btn-success btn-xl" id="toggleRobotbtn" onclick="ontoggleRobotbtn(document.getElementById('toggleRobotbtn'))">Enabled</button>
+            </div>
+
+            <div class="col-md-6 quarter bl">
+                <canvas id="joystick"></canvas>
+            </div>
+
+            <div class="col-md-6 quarter br">
+                <input id="tiltSlider" class="input-range" orient="vertical" style="transform: rotate(270deg); margin-left: -5%; width: 160px" type="range" step="0.1" value="0" min="-1" max="1" onchange="onSliderChange(document.getElementById('tiltSlider'))" oninput="currentSliderVal(document.getElementById('tiltSlider'))">
+                <button type="button" class="btn btn-danger btn-super-xl" id="shootbtn" onclick="onshootbtn(document.getElementById('shootbtn'))"><b>SHOOT</b></button>
+            </div>
+        </div>
+    </body>
+</html>

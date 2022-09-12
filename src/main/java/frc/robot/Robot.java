@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
         m_robotContainer.barrel.getBarrel().resetEncoder();
         m_robotContainer.drive.coast();
         SmartDashboard.putNumber("ShootTime", 40);
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
+//        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
         CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
     }
 
@@ -70,7 +70,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        m_robotContainer.drive.stop();
         m_robotContainer.drive.coast();
+        m_robotContainer.tiltMotor.stop();
+        m_robotContainer.barrelMotor.stop();
         m_robotContainer.spike.set(Relay.Value.kOff);
     }
 

@@ -8,7 +8,6 @@ import frc.robot.subsystems.Barrel;
 public class IndexTeleop extends CommandBase {
 
     private final Barrel barrel;
-    private final Encoder encoder;
     private boolean finished = false;
     private final double threshold = 0.60;
     private final ColorSensorV3 colorSensor;
@@ -16,8 +15,6 @@ public class IndexTeleop extends CommandBase {
 
     public IndexTeleop(Barrel barrel, ColorSensorV3 colorSensor) {
         this.barrel = barrel;
-        this.encoder = barrel.getBarrelEncoder();
-        encoder.reset();
         this.colorSensor = colorSensor;
         addRequirements(barrel);
     }
