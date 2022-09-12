@@ -51,6 +51,6 @@ public class RobotMap {
     public static final boolean barrelReverse = true;
 
     public static final int tilt = 8;
-    public static final boolean tiltReverse = false;
+    public static final boolean tiltReverse = true;
 }
 

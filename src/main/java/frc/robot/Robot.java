@@ -70,6 +70,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        m_robotContainer.barrelMotor.stop();
+        m_robotContainer.tiltMotor.stop();
         m_robotContainer.drive.coast();
         m_robotContainer.spike.set(Relay.Value.kOff);
     }
