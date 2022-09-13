@@ -21,11 +21,6 @@ async function sendDrive(x, y) {
             // console.log(result); Returns some stuff but idk what it means
         }
     });
-
-    // if (shootnow) {
-    // shootnow = false;
-    // shootBtn.classList.remove("disabled")
-    // }
 }
 
 async function sendShoot(shoot) {
@@ -69,11 +64,6 @@ async function sendTilt(tilt) {
             // console.log(result); Returns some stuff but idk what it means
         }
     });
-
-    // if (shootnow) {
-    // shootnow = false;
-    // shootBtn.classList.remove("disabled")
-    // }
 }
 
 async function sendTime(time) {
@@ -112,11 +102,6 @@ async function sendMode(disable) {
             // console.log(result); Returns some stuff but idk what it means
         }
     });
-
-    // if (shootnow) {
-    // shootnow = false;
-    // shootBtn.classList.remove("disabled")
-    // }
 }
 
 window.addEventListener("click", function(e) {
