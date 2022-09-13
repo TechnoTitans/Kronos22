@@ -143,17 +143,17 @@ function currentSliderVal(slider) {
 }
 
 function ontoggleRobotbtn(btn) {
-    if (!disable) {
-        disable = true;
-        btn.innerHTML = "Enabled"
-        btn.classList.remove("btn-danger");
-        btn.classList.add("btn-success");
-
-    } else {
+    if (disable) {
         disable = false;
         btn.innerHTML = "Disabled"
         btn.classList.remove("btn-success");
         btn.classList.add("btn-danger");
+
+    } else {
+        disable = true;
+        btn.innerHTML = "Enabled"
+        btn.classList.remove("btn-danger");
+        btn.classList.add("btn-success");
     }
     sendMode(disable)
 };

@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
@@ -27,6 +28,7 @@ public class TitanDS extends CommandBase {
     private static Relay spike;
 
     private static final double driveSensitivity = 1;
+    private static final double tiltSensitivity = 1;
 
     public TitanDS(JankDrive drive, BarrelTilt barrelTilt, AutoShoot autoShoot, Relay spike) {
         this.drive = drive;
@@ -91,7 +93,14 @@ public class TitanDS extends CommandBase {
 
             String json = new String(t.getRequestBody().readAllBytes());
             double tiltVal = Double.parseDouble(json.substring(1, json.length() - 1).replaceAll("\".*\":", "").replace("\"", ""));
-            barrelTilt.set(tiltVal);
+            if (tiltVal > 0) {
+                barrelTilt.set(tiltVal*tiltSensitivity);
+            } else if (tiltVal < 0) {
+                barrelTilt.set(tiltVal*tiltSensitivity*0.5);
+            } else {
+                barrelTilt.set(0);
+            }
+            SmartDashboard.putNumber("tiltval", tiltVal);
             finishRequest(t);
         }
     }
@@ -102,7 +111,7 @@ public class TitanDS extends CommandBase {
             if (!t.getRequestMethod().equalsIgnoreCase("POST")) t.sendResponseHeaders(404, 0);
 
             String json = new String(t.getRequestBody().readAllBytes());
-            boolean compressorMode = !Boolean.parseBoolean(json.substring(1, json.length() - 1).replaceAll("\".*\":", ""));
+            boolean compressorMode = Boolean.parseBoolean(json.substring(1, json.length() - 1).replaceAll("\".*\":", ""));
 
             if (compressorMode) {
                 RobotContainer.spikeMode = Relay.Value.kForward;

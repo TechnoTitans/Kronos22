@@ -7,9 +7,10 @@ import frc.robot.subsystems.Barrel;
 public class IndexTeleop extends CommandBase {
 
     private final Barrel barrel;
-    private final double threshold = 11000;
+    private final double threshold = 15000;
     private final ColorSensorV3 colorSensor;
     private boolean proceed = false;
+    private boolean finished = false;
 
     public IndexTeleop(Barrel barrel, ColorSensorV3 colorSensor) {
         this.barrel = barrel;
@@ -19,7 +20,7 @@ public class IndexTeleop extends CommandBase {
 
     @Override
     public void initialize() {
-        barrel.set(0.25);
+        barrel.set(0.35);
     }
 
     @Override
@@ -29,16 +30,20 @@ public class IndexTeleop extends CommandBase {
             proceed = true;
         }
 
+        if (colorSensor.getRed() >= threshold && proceed) {
+            barrel.set(0);
+            finished = true;
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        barrel.set(0);
         proceed = false;
+        finished = false;
     }
 
     @Override
     public boolean isFinished() {
-        return colorSensor.getRed() >= threshold && proceed;
+        return finished;
     }
 }
