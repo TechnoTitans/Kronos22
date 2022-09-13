@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
 
     private RobotContainer m_robotContainer;
 
-    public static double shoot_delay = 40;
+    public static double shoot_delay = 50;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -35,9 +35,9 @@ public class Robot extends TimedRobot {
         m_robotContainer.dout.set(false);
         m_robotContainer.barrel.getBarrel().resetEncoder();
         m_robotContainer.drive.coast();
-        SmartDashboard.putNumber("ShootTime", 40);
+        SmartDashboard.putNumber("ShootTime", 50);
 //        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
+//        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
     }
 
     /**
@@ -55,13 +55,12 @@ public class Robot extends TimedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
-        shoot_delay = SmartDashboard.getNumber("ShootTime", 40);
-        if (shoot_delay < 25) {
-            SmartDashboard.putNumber("ShootTime", 25);
-            shoot_delay = 25;
-        }
+//        shoot_delay = SmartDashboard.getNumber("ShootTime", 50);
+//        if (shoot_delay < 25) {
+//            SmartDashboard.putNumber("ShootTime", 25);
+//            shoot_delay = 25;
+//        }
 
-        SmartDashboard.putNumber("color", m_robotContainer.colorSensor.getColor().red);
 
     }
 
@@ -111,8 +110,8 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
         m_robotContainer.drive.brake();
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
+//        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
+//        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
     }
 
     /**
@@ -120,7 +119,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        SmartDashboard.putBoolean("bool", m_robotContainer.colorSensor.isConnected());
     }
 
     @Override

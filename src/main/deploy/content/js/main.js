@@ -76,6 +76,25 @@ async function sendTilt(tilt) {
     // }
 }
 
+async function sendTime(time) {
+    let data = {
+        shottime: time,
+    };
+
+    $.ajax({
+        url: "/time",
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        type: "POST",
+        success: function (result) {
+            //it worked
+        }, error: function (result) {
+            // console.log(result); Returns some stuff but idk what it means
+        }
+    });
+}
+
 async function sendMode(disable) {
     let data = {
         disabled: disable
@@ -107,9 +126,14 @@ window.addEventListener("click", function(e) {
     }
 });
 
+function onTimingChange(timein) {
+    sendTime(timein.value)
+}
+
 function onSliderChange(slider) {
     slider.value = 0
     sliderpos = 0;
+    sendTilt(sliderpos)
 }
 
 function currentSliderVal(slider) {
@@ -134,14 +158,14 @@ function currentSliderVal(slider) {
 }
 
 function ontoggleRobotbtn(btn) {
-    if (disable) {
-        disable = false;
+    if (!disable) {
+        disable = true;
         btn.innerHTML = "Enabled"
         btn.classList.remove("btn-danger");
         btn.classList.add("btn-success");
 
     } else {
-        disable = true;
+        disable = false;
         btn.innerHTML = "Disabled"
         btn.classList.remove("btn-success");
         btn.classList.add("btn-danger");

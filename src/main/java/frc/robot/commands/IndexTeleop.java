@@ -1,15 +1,13 @@
 package frc.robot.commands;
 
 import com.revrobotics.ColorSensorV3;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Barrel;
 
 public class IndexTeleop extends CommandBase {
 
     private final Barrel barrel;
-    private boolean finished = false;
-    private final double threshold = 0.60;
+    private final double threshold = 11000;
     private final ColorSensorV3 colorSensor;
     private boolean proceed = false;
 
@@ -21,31 +19,26 @@ public class IndexTeleop extends CommandBase {
 
     @Override
     public void initialize() {
-        barrel.set(-1);
+        barrel.set(0.25);
     }
 
     @Override
     public void execute() {
-        if (threshold-15 >= colorSensor.getColor().green) { // This makes sure the barrel has indexed off of the color otherwise the other
+        if (threshold >= colorSensor.getRed() && !proceed) { // This makes sure the barrel has indexed off of the color otherwise the other
             //if will instantly stop the barrel from indexing because it's already on the color.
             proceed = true;
         }
 
-
-        if (colorSensor.getColor().green >= threshold && proceed) { //TBD VALUE
-            barrel.set(0);
-            finished = true;
-            proceed = false;
-        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        finished = false;
+        barrel.set(0);
+        proceed = false;
     }
 
     @Override
     public boolean isFinished() {
-        return finished;
+        return colorSensor.getRed() >= threshold && proceed;
     }
 }

@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.DriveTeleop;
-import frc.robot.commands.IndexTeleop;
-import frc.robot.commands.ShootTeleop;
-import frc.robot.commands.TiltTeleop;
+import frc.robot.commands.*;
 import frc.robot.motor.TitanSRX;
 import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.BarrelTilt;
@@ -37,7 +34,7 @@ public class RobotContainer {
     public ColorSensorV3 colorSensor;
 
     //Value
-    Relay.Value spikeMode = Relay.Value.kOff;
+    public Relay.Value spikeMode = Relay.Value.kOff;
 
     //DigitalOutput
     public DigitalOutput dout;
@@ -55,6 +52,7 @@ public class RobotContainer {
     public IndexTeleop indexTeleop;
     public TiltTeleop tiltTeleop;
     public ShootTeleop shootTeleop;
+    public AutoShoot autoShoot;
 
     public RobotContainer() {
         oi = new OI();
@@ -101,15 +99,18 @@ public class RobotContainer {
 
         //ColorSensor
         colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+        colorSensor.configureColorSensor(ColorSensorV3.ColorSensorResolution.kColorSensorRes16bit, ColorSensorV3.ColorSensorMeasurementRate.kColorRate25ms, ColorSensorV3.GainFactor.kGain18x);
 
         //Teleop commands
         indexTeleop = new IndexTeleop(barrel, colorSensor);
         tiltTeleop = new TiltTeleop(barrelTilt, oi::getXboxPOV);
         shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
 
+        autoShoot = new AutoShoot(dout, indexTeleop);
+
 
         //TitanDS
-        titanDS = new TitanDS(drive, barrel);
+        titanDS = new TitanDS(drive, barrel, barrelTilt, autoShoot, spike);
 
         configureButtonBindings();
     }
