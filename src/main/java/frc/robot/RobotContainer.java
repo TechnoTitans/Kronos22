@@ -124,13 +124,14 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        indexButton.whenPressed(indexTeleop);
-        shootButton.whenPressed(shootTeleop);
-        compressorButton.whenPressed(new InstantCommand(() -> {
-            spikeMode = spike.get() == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;
-            spike.set(spikeMode);
-        }));
-
+        if (Robot.isController) {
+            indexButton.whenPressed(indexTeleop);
+            shootButton.whenPressed(shootTeleop);
+            compressorButton.whenPressed(new InstantCommand(() -> {
+                spikeMode = spike.get() == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;
+                spike.set(spikeMode);
+            }));
+        }
     }
 
     public Command getAutonomousCommand() {
