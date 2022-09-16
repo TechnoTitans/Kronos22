@@ -10,19 +10,18 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.DriveTeleop;
-import frc.robot.commands.IndexTeleop;
-import frc.robot.commands.ShootTeleop;
-import frc.robot.commands.TiltTeleop;
+import frc.robot.commands.*;
 import frc.robot.motor.TitanSRX;
 import frc.robot.subsystems.Barrel;
 import frc.robot.subsystems.BarrelTilt;
 import frc.robot.subsystems.JankDrive;
 import frc.robot.utils.TitanButton;
+import frc.robot.utils.TitanDS;
 
 public class RobotContainer {
     //OI
     public OI oi;
+    public TitanDS titanDS;
 
     //Motors
     public TitanSRX leftFront, leftRear, rightFront, rightRear;
@@ -35,7 +34,7 @@ public class RobotContainer {
     public ColorSensorV3 colorSensor;
 
     //Value
-    Relay.Value spikeMode = Relay.Value.kOff;
+    public static Relay.Value spikeMode = Relay.Value.kOff;
 
     //DigitalOutput
     public DigitalOutput dout;
@@ -53,9 +52,12 @@ public class RobotContainer {
     public IndexTeleop indexTeleop;
     public TiltTeleop tiltTeleop;
     public ShootTeleop shootTeleop;
+    public AutoShoot autoShoot;
 
     public RobotContainer() {
-        oi = new OI();
+        if (Robot.isController) {
+            oi = new OI();
+        }
 
         //Drivetrain Motors
         leftFront = new TitanSRX(RobotMap.leftFront, RobotMap.leftFrontReverse);
@@ -68,7 +70,9 @@ public class RobotContainer {
 
         //DriveTrain stuff
         drive = new JankDrive(leftFront, rightFront);
-        driveTeleop = new DriveTeleop(drive, oi::getXboxLeftTrigger, oi::getXboxRightTrigger, oi::getXboxRightX);
+        if (Robot.isController) {
+            driveTeleop = new DriveTeleop(drive, oi::getXboxLeftTrigger, oi::getXboxRightTrigger, oi::getXboxRightX);
+        }
 
         //Turret
         //Makes it less jittery but at the same time less accurate. most accurate = k4X. least jitter = k1X
@@ -90,12 +94,14 @@ public class RobotContainer {
         //Set PWM rate or it won't pulse right length
         dout.setPWMRate(10000); //Random Value
 
-        //Index Barrel
-        indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
-        //Shoot
-        shootButton = new TitanButton(oi.getXbox(), OI.XBOX_A);
-        //Toggle Compressor
-        compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
+        if (Robot.isController) {
+            //Index Barrel
+            indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
+            //Shoot
+            shootButton = new TitanButton(oi.getXbox(), OI.XBOX_A);
+            //Toggle Compressor
+            compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
+        }
 
         //ColorSensor
         colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
@@ -103,21 +109,29 @@ public class RobotContainer {
 
         //Teleop commands
         indexTeleop = new IndexTeleop(barrel, colorSensor);
-        tiltTeleop = new TiltTeleop(barrelTilt, oi::getXboxPOV);
-        shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
 
+        if (Robot.isController) {
+            tiltTeleop = new TiltTeleop(barrelTilt, oi::getXboxPOV);
+            shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
+        } else {
+            autoShoot = new AutoShoot(dout, indexTeleop);
+
+            //TitanDS
+            titanDS = new TitanDS(drive, barrelTilt, autoShoot, spike);
+        }
 
         configureButtonBindings();
     }
 
     private void configureButtonBindings() {
-        indexButton.whenPressed(indexTeleop);
-        shootButton.whenPressed(shootTeleop);
-        compressorButton.whenPressed(new InstantCommand(() -> {
-            spikeMode = spike.get() == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;
-            spike.set(spikeMode);
-        }));
-
+        if (Robot.isController) {
+            indexButton.whenPressed(indexTeleop);
+            shootButton.whenPressed(shootTeleop);
+            compressorButton.whenPressed(new InstantCommand(() -> {
+                spikeMode = spike.get() == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;
+                spike.set(spikeMode);
+            }));
+        }
     }
 
     public Command getAutonomousCommand() {

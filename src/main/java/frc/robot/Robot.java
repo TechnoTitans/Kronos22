@@ -21,7 +21,9 @@ public class Robot extends TimedRobot {
 
     private RobotContainer m_robotContainer;
 
-    public static double shoot_delay = 40;
+    public static double shoot_delay = 50;
+
+    public static final boolean isController = false;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -35,9 +37,11 @@ public class Robot extends TimedRobot {
         m_robotContainer.dout.set(false);
         m_robotContainer.barrel.getBarrel().resetEncoder();
         m_robotContainer.drive.coast();
-        SmartDashboard.putNumber("ShootTime", 40);
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
+        if (isController) {
+            SmartDashboard.putNumber("ShootTime", 50);
+            CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
+            CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
+        }
     }
 
     /**
@@ -55,13 +59,13 @@ public class Robot extends TimedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
-        shoot_delay = SmartDashboard.getNumber("ShootTime", 40);
-        if (shoot_delay < 25) {
-            SmartDashboard.putNumber("ShootTime", 25);
-            shoot_delay = 25;
+        if (isController) {
+            shoot_delay = SmartDashboard.getNumber("ShootTime", 50);
+            if (shoot_delay < 25) {
+                SmartDashboard.putNumber("ShootTime", 25);
+                shoot_delay = 25;
+            }
         }
-
-        SmartDashboard.putNumber("color", m_robotContainer.colorSensor.getColor().red);
 
     }
 
@@ -70,9 +74,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-        m_robotContainer.barrelMotor.stop();
-        m_robotContainer.tiltMotor.stop();
+        m_robotContainer.drive.set(0, 0);
         m_robotContainer.drive.coast();
+        m_robotContainer.tiltMotor.stop();
+        m_robotContainer.barrelMotor.stop();
         m_robotContainer.spike.set(Relay.Value.kOff);
     }
 
@@ -110,8 +115,10 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
         m_robotContainer.drive.brake();
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
-        CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
+        if (isController) {
+            CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
+            CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
+        }
     }
 
     /**
@@ -119,15 +126,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        SmartDashboard.putBoolean("bool", m_robotContainer.colorSensor.isConnected());
     }
 
     @Override
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
-        m_robotContainer.spike.set(Relay.Value.kForward);
-
     }
 
     /**
