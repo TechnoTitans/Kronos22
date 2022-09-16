@@ -182,7 +182,7 @@ window.addEventListener('load', () => {
     if (!screen.orientation.type.toLowerCase().includes("landscape")) {
         document.getElementById("body").innerHTML = "";
         alert("Please rotate your device to landscape mode");
-        return;
+//        return;
     }
 
     canvas = document.getElementById('joystick');

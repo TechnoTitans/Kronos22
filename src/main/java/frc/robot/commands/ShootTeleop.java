@@ -13,7 +13,6 @@ public class ShootTeleop extends CommandBase {
     private final IndexTeleop indexTeleop;
     private final TitanButton btn;
     private final Timer timer;
-    private boolean finished = false;
 
     public ShootTeleop(DigitalOutput dout, IndexTeleop indexTeleop, TitanButton btn) {
         this.dout = dout;
@@ -36,20 +35,16 @@ public class ShootTeleop extends CommandBase {
 
     @Override
     public void execute() {
-        if (timer.hasElapsed(1)) {
-            CommandScheduler.getInstance().schedule(indexTeleop); //turns barrel after shot
-            finished = true;
-        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        finished = false;
         btn.stopRumble();
+        CommandScheduler.getInstance().schedule(indexTeleop); //turns barrel after shot
     }
 
     @Override
     public boolean isFinished() {
-        return finished;
+        return timer.hasElapsed(1);
     }
 }

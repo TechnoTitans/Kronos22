@@ -21,9 +21,9 @@ public class Robot extends TimedRobot {
 
     private RobotContainer m_robotContainer;
 
-    public static double shoot_delay = 50;
+    public static double shoot_delay = 45;
 
-    public static final boolean isController = false;
+    public static final boolean isController = true;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
         m_robotContainer.barrel.getBarrel().resetEncoder();
         m_robotContainer.drive.coast();
         if (isController) {
-            SmartDashboard.putNumber("ShootTime", 50);
+            SmartDashboard.putNumber("ShootTime", 45);
             CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
             CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
         }
@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
 
         if (isController) {
-            shoot_delay = SmartDashboard.getNumber("ShootTime", 50);
+            shoot_delay = SmartDashboard.getNumber("ShootTime", 45);
             if (shoot_delay < 25) {
                 SmartDashboard.putNumber("ShootTime", 25);
                 shoot_delay = 25;

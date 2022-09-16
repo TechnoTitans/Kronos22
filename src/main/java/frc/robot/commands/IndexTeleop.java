@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import com.revrobotics.ColorSensorV3;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Barrel;
 
@@ -25,6 +26,7 @@ public class IndexTeleop extends CommandBase {
 
     @Override
     public void execute() {
+        SmartDashboard.putNumber("red", colorSensor.getRed());
         if (threshold >= colorSensor.getRed() && !proceed) { // This makes sure the barrel has indexed off of the color otherwise the other
             //if will instantly stop the barrel from indexing because it's already on the color.
             proceed = true;

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.*;
 import frc.robot.motor.TitanSRX;
@@ -45,7 +46,7 @@ public class RobotContainer {
     public BarrelTilt barrelTilt;
 
     //Buttons
-    public TitanButton indexButton, shootButton, compressorButton;
+    public TitanButton indexButton, shootButton, compressorButton, turnButton;
 
     //Commands
     public DriveTeleop driveTeleop;
@@ -99,6 +100,7 @@ public class RobotContainer {
             indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
             //Shoot
             shootButton = new TitanButton(oi.getXbox(), OI.XBOX_A);
+            turnButton = new TitanButton(oi.getXbox(), OI.XBOX_X);
             //Toggle Compressor
             compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
         }
@@ -131,6 +133,9 @@ public class RobotContainer {
                 spikeMode = spike.get() == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;
                 spike.set(spikeMode);
             }));
+            turnButton.whenPressed(new InstantCommand(() -> CommandScheduler.getInstance().schedule(indexTeleop)));
+//            turnButton.whenPressed(new InstantCommand(() -> barrelMotor.set(0.5)));
+//            turnButton.whenReleased(new InstantCommand( () -> barrel.set(0)));
         }
     }
 
