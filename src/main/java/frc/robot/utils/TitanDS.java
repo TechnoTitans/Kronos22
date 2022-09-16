@@ -18,6 +18,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 public class TitanDS extends CommandBase {
@@ -27,7 +28,7 @@ public class TitanDS extends CommandBase {
     private static AutoShoot autoShoot;
     private static Relay spike;
 
-    private static final double driveSensitivity = 1;
+    private static final double driveSensitivity = 0.7;
     private static final double tiltSensitivity = 1;
 
     public TitanDS(JankDrive drive, BarrelTilt barrelTilt, AutoShoot autoShoot, Relay spike) {
@@ -71,7 +72,12 @@ public class TitanDS extends CommandBase {
 
             double x = Double.valueOf(out[0])/100.0;
             double y = Double.valueOf(out[1])/100.0;
-            drive.set((y + x) * driveSensitivity, (y - x) * driveSensitivity);
+
+            if (x != 0 && y != 0) {
+                drive.set(-(y - x) * driveSensitivity, -(y + x) * driveSensitivity);
+            } else {
+                drive.stop();
+            }
             finishRequest(t);
         }
     }

@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-        m_robotContainer.drive.stop();
+        m_robotContainer.drive.set(0, 0);
         m_robotContainer.drive.coast();
         m_robotContainer.tiltMotor.stop();
         m_robotContainer.barrelMotor.stop();

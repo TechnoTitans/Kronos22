@@ -189,8 +189,6 @@ window.addEventListener('load', () => {
     ctx = canvas.getContext('2d');
     resize();
 
-    // document.addEventListener('mousedown', startDrawing);
-    // document.addEventListener('mouseup', stopDrawing);
     // document.addEventListener('mousemove', Draw);
 
     document.addEventListener('touchstart', startDrawing);
@@ -246,9 +244,8 @@ function getPosition(event) {
 
 function is_it_in_the_circle() {
     let current_radius = Math.sqrt(Math.pow(coord.x - x_orig, 2) + Math.pow(coord.y - y_orig, 2));
-    return radius >= current_radius
+    return radius >= current_radius;
 }
-
 
 function startDrawing(event) {
     paint = true;
@@ -261,17 +258,17 @@ function startDrawing(event) {
     }
 }
 
-
 function stopDrawing() {
     paint = false;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     background();
     joystick(width / 2, height / 3);
+    coord.x = 0
+    coord.y = 0
     sendDrive(0, 0);
 }
 
 function Draw(event) {
-
     if (paint) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         background();
@@ -291,11 +288,10 @@ function Draw(event) {
             y = radius * Math.sin(angle) + y_orig;
             joystick(x, y);
         }
+            getPosition(event);
 
-        getPosition(event);
-
-        let x_relative = Math.round(x_orig - x);
-        let y_relative = Math.round(y_orig - y);
-        sendDrive(x_relative, y_relative);
+            let x_relative = Math.round(x_orig - x);
+            let y_relative = Math.round(y_orig - y);
+            sendDrive(x_relative, y_relative);
     }
 }
