@@ -266,6 +266,10 @@ function stopDrawing() {
     coord.x = 0
     coord.y = 0
     sendDrive(0, 0);
+    sendDrive(0, 0);
+    sendDrive(0, 0);
+    sendDrive(0, 0);
+    sendDrive(0, 0);
 }
 
 function Draw(event) {

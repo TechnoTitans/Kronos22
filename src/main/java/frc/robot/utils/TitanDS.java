@@ -18,7 +18,6 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 public class TitanDS extends CommandBase {
@@ -74,9 +73,9 @@ public class TitanDS extends CommandBase {
             double y = Double.valueOf(out[1])/100.0;
 
             if (x != 0 && y != 0) {
-                drive.set(-(y - x) * driveSensitivity, -(y + x) * driveSensitivity);
+                drive.set((y - x) * driveSensitivity, (y + x) * driveSensitivity);
             } else {
-                drive.stop();
+                drive.set(0, 0);
             }
             finishRequest(t);
         }
@@ -87,7 +86,9 @@ public class TitanDS extends CommandBase {
         public void handle(HttpExchange t) throws IOException {
             if (!t.getRequestMethod().equalsIgnoreCase("POST")) t.sendResponseHeaders(404, 0);
 
-            CommandScheduler.getInstance().schedule(autoShoot);
+            if (!CommandScheduler.getInstance().isScheduled(autoShoot)) {
+                CommandScheduler.getInstance().schedule(autoShoot);
+            }
             finishRequest(t);
         }
     }
