@@ -74,8 +74,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        m_robotContainer.drive.brake();
         m_robotContainer.drive.set(0, 0);
-        m_robotContainer.drive.coast();
         m_robotContainer.tiltMotor.stop();
         m_robotContainer.barrelMotor.stop();
         m_robotContainer.spike.set(Relay.Value.kOff);
@@ -130,6 +130,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
+        m_robotContainer.drive.coast();
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }

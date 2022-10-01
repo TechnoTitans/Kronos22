@@ -2,6 +2,8 @@ let disable = false;
 let shootnow = false;
 let shootBtn;
 let sliderpos = 0;
+var bigx = 0;
+var bigy = 0;
 
 async function sendDrive(x, y) {
     let data = {
@@ -195,7 +197,8 @@ window.addEventListener('load', () => {
     document.addEventListener('touchend', stopDrawing);
     document.addEventListener('touchcancel', stopDrawing);
     document.addEventListener('touchmove', Draw);
-    window.addEventListener('resize', resize);
+    setInterval(function() {sendDrive(bigx, bigy);}, 100);
+    // window.addEventListener('resize', resize);
 
 });
 
@@ -265,6 +268,8 @@ function stopDrawing() {
     joystick(width / 2, height / 3);
     coord.x = 0
     coord.y = 0
+    bigx = 0;
+    bigy = 0;
     sendDrive(0, 0);
     sendDrive(0, 0);
     sendDrive(0, 0);
@@ -296,6 +301,8 @@ function Draw(event) {
 
             let x_relative = Math.round(x_orig - x);
             let y_relative = Math.round(y_orig - y);
-            sendDrive(x_relative, y_relative);
+            bigx = x_relative;
+            bigy = y_relative;
+            // sendDrive(x_relative, y_relative);
     }
 }

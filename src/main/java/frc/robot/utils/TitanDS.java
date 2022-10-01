@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -18,7 +19,6 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 public class TitanDS extends CommandBase {
@@ -27,6 +27,8 @@ public class TitanDS extends CommandBase {
     private static BarrelTilt barrelTilt;
     private static AutoShoot autoShoot;
     private static Relay spike;
+    private static Timer timer;
+    private static double[] speeds = new double[2];
 
     private static final double driveSensitivity = 0.7;
     private static final double tiltSensitivity = 1;
@@ -36,13 +38,28 @@ public class TitanDS extends CommandBase {
         this.barrelTilt = barrelTilt;
         this.autoShoot = autoShoot;
         this.spike = spike;
+        this.timer = new Timer();
 
         // Steal the subsystems
         addRequirements(drive);
         addRequirements(barrelTilt);
 
+        //start timer
+        timer.reset();
+        timer.reset();
+
         // Start server
         startWebServer();
+    }
+
+    @Override
+    public void execute() {
+        if (timer.hasElapsed(150)) {
+            if (speeds == new double[2]) {
+                drive.set(0, 0);
+            }
+            speeds = new double[2];
+        }
     }
 
     private static class FileHandler implements HttpHandler {
@@ -72,12 +89,9 @@ public class TitanDS extends CommandBase {
 
             double x = Double.valueOf(out[0])/100.0;
             double y = Double.valueOf(out[1])/100.0;
+            speeds = new double[] {x, y};
 
-            if (x != 0 && y != 0) {
-                drive.set(-(y - x) * driveSensitivity, -(y + x) * driveSensitivity);
-            } else {
-                drive.stop();
-            }
+            drive.set((y - x) * driveSensitivity, (y + x) * driveSensitivity);
             finishRequest(t);
         }
     }
@@ -87,7 +101,9 @@ public class TitanDS extends CommandBase {
         public void handle(HttpExchange t) throws IOException {
             if (!t.getRequestMethod().equalsIgnoreCase("POST")) t.sendResponseHeaders(404, 0);
 
-            CommandScheduler.getInstance().schedule(autoShoot);
+            if (!CommandScheduler.getInstance().isScheduled(autoShoot)) {
+                CommandScheduler.getInstance().schedule(autoShoot);
+            }
             finishRequest(t);
         }
     }
