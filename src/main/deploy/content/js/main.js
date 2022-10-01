@@ -184,7 +184,7 @@ window.addEventListener('load', () => {
     if (!screen.orientation.type.toLowerCase().includes("landscape")) {
         document.getElementById("body").innerHTML = "";
         alert("Please rotate your device to landscape mode");
-//        return;
+        return;
     }
 
     canvas = document.getElementById('joystick');
@@ -198,7 +198,7 @@ window.addEventListener('load', () => {
     document.addEventListener('touchcancel', stopDrawing);
     document.addEventListener('touchmove', Draw);
     setInterval(function() {sendDrive(bigx, bigy);}, 100);
-    // window.addEventListener('resize', resize);
+     window.addEventListener('resize', resize);
 
 });
 
@@ -270,10 +270,6 @@ function stopDrawing() {
     coord.y = 0
     bigx = 0;
     bigy = 0;
-    sendDrive(0, 0);
-    sendDrive(0, 0);
-    sendDrive(0, 0);
-    sendDrive(0, 0);
     sendDrive(0, 0);
 }
 
