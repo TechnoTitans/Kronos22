@@ -197,9 +197,8 @@ window.addEventListener('load', () => {
     document.addEventListener('touchend', stopDrawing);
     document.addEventListener('touchcancel', stopDrawing);
     document.addEventListener('touchmove', Draw);
+    window.addEventListener('resize', resize);
     setInterval(function() {sendDrive(bigx, bigy);}, 100);
-     window.addEventListener('resize', resize);
-
 });
 
 let width, height, radius, x_orig, y_orig;
