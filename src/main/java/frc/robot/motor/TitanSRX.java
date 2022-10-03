@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
+@SuppressWarnings("unused")
 public class TitanSRX extends WPI_TalonSRX implements MotorController {
     private Encoder encoder;
 

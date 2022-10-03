@@ -7,10 +7,9 @@ import java.util.function.DoubleSupplier;
 
 public class DriveTeleop extends CommandBase {
     private final JankDrive drive;
-    private DoubleSupplier leftInput, rightInput, steeringInput;
-    private double steering, throttle;
-
-    private final double SENSITIVITY = 0.6;
+    private final DoubleSupplier leftInput;
+    private final DoubleSupplier rightInput;
+    private final DoubleSupplier steeringInput;
 
     public DriveTeleop(JankDrive drive, DoubleSupplier leftInput, DoubleSupplier rightInput, DoubleSupplier steeringInput) {
         this.drive = drive;
@@ -26,9 +25,10 @@ public class DriveTeleop extends CommandBase {
     @Override
     public void execute() {
         // Remove drift from controller by adding deadband
-        steering = steeringInput.getAsDouble() > -0.25 && steeringInput.getAsDouble() < 0.25 ? 0 : steeringInput.getAsDouble();
+        double steering = steeringInput.getAsDouble() > -0.25 && steeringInput.getAsDouble() < 0.25 ? 0 : steeringInput.getAsDouble();
         steering *= 0.7;
-        throttle = leftInput.getAsDouble() - rightInput.getAsDouble();
+        double throttle = leftInput.getAsDouble() - rightInput.getAsDouble();
+        double SENSITIVITY = 0.6;
         drive.set((throttle - steering) * SENSITIVITY, (throttle + steering) * SENSITIVITY);
     }
 

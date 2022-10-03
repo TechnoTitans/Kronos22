@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 
+@SuppressWarnings("unused")
 public class OI {
     public static final int XBOX_A = 1;
     public static final int XBOX_B = 2;
@@ -12,7 +13,7 @@ public class OI {
     public static final int XBOX_BTN_SELECT = 7;
     public static final int XBOX_BTN_START = 8;
 
-    private XboxController xbox;
+    private final XboxController xbox;
 
     public OI() {
         this.xbox = new XboxController(RobotMap.Controller);

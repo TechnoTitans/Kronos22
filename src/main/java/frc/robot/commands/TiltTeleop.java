@@ -7,8 +7,7 @@ import java.util.function.DoubleSupplier;
 
 public class TiltTeleop extends CommandBase {
     private final BarrelTilt barrelTilt;
-    private final double SPEED = 0.45;
-    private DoubleSupplier button;
+    private final DoubleSupplier button;
 
     public TiltTeleop(BarrelTilt barrelTilt, DoubleSupplier button) {
         this.barrelTilt = barrelTilt;
@@ -21,10 +20,11 @@ public class TiltTeleop extends CommandBase {
 
     @Override
     public void execute() {
+        double SPEED = 0.45;
         if (button.getAsDouble() == 0) {
             barrelTilt.set(SPEED);
         } else if (button.getAsDouble() == 180) {
-            barrelTilt.set(-SPEED*0.5);
+            barrelTilt.set(-SPEED *0.5);
         } else {
             barrelTilt.set(0);
         }

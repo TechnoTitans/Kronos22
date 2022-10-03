@@ -8,7 +8,6 @@ import frc.robot.subsystems.Barrel;
 public class IndexTeleop extends CommandBase {
 
     private final Barrel barrel;
-    private final double threshold = 15000;
     private final ColorSensorV3 colorSensor;
     private boolean proceed = false;
     private boolean finished = false;
@@ -27,6 +26,7 @@ public class IndexTeleop extends CommandBase {
     @Override
     public void execute() {
         SmartDashboard.putNumber("red", colorSensor.getRed());
+        double threshold = 15000;
         if (threshold >= colorSensor.getRed() && !proceed) { // This makes sure the barrel has indexed off of the color otherwise the other
             //if will instantly stop the barrel from indexing because it's already on the color.
             proceed = true;

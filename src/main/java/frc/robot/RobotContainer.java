@@ -7,7 +7,6 @@ package frc.robot;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -20,6 +19,7 @@ import frc.robot.subsystems.JankDrive;
 import frc.robot.utils.TitanButton;
 import frc.robot.utils.TitanDS;
 
+@SuppressWarnings("CommentedOutCode")
 public class RobotContainer {
     //OI
     public OI oi;

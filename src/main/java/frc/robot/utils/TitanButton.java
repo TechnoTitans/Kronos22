@@ -3,9 +3,10 @@ package frc.robot.utils;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+@SuppressWarnings("unused")
 public class TitanButton extends JoystickButton {
-    private GenericHID hid;
-    private int buttonNumber;
+    private final GenericHID hid;
+    private final int buttonNumber;
 
     public TitanButton(GenericHID hid, int buttonNumber) {
         super(hid, buttonNumber);
