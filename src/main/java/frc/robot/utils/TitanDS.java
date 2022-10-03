@@ -6,7 +6,6 @@ import com.sun.net.httpserver.HttpServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
@@ -19,6 +18,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 public class TitanDS extends CommandBase {
@@ -28,17 +28,18 @@ public class TitanDS extends CommandBase {
     private static AutoShoot autoShoot;
     private static Relay spike;
     private static Timer timer;
-    private static double[] speeds = new double[2];
+    private static double[] speeds;
 
     private static final double driveSensitivity = 0.7;
     private static final double tiltSensitivity = 1;
 
     public TitanDS(JankDrive drive, BarrelTilt barrelTilt, AutoShoot autoShoot, Relay spike) {
-        this.drive = drive;
-        this.barrelTilt = barrelTilt;
-        this.autoShoot = autoShoot;
-        this.spike = spike;
-        this.timer = new Timer();
+        TitanDS.drive = drive;
+        TitanDS.barrelTilt = barrelTilt;
+        TitanDS.autoShoot = autoShoot;
+        TitanDS.spike = spike;
+        TitanDS.timer = new Timer();
+        TitanDS.speeds = new double[2];
 
         // Steal the subsystems
         addRequirements(drive);
@@ -54,11 +55,13 @@ public class TitanDS extends CommandBase {
 
     @Override
     public void execute() {
-        if (timer.hasElapsed(150)) {
-            if (speeds == new double[2]) {
+        double[] newSpd = new double[2];
+
+        if (timer.hasElapsed(150)) { //This is 150 not 100 to allow for 50 ms latency.
+            if (Arrays.equals(speeds, newSpd)) {
                 drive.set(0, 0);
             }
-            speeds = new double[2];
+            speeds = newSpd;
         }
     }
 
@@ -70,6 +73,7 @@ public class TitanDS extends CommandBase {
         public void handle(HttpExchange t) throws IOException {
             File file = new File(path.toString());
             InputStream in = new BufferedInputStream(new FileInputStream(file));
+
             t.sendResponseHeaders(200, file.length());
             OutputStream os = t.getResponseBody();
             os.write(in.readAllBytes());
@@ -87,8 +91,8 @@ public class TitanDS extends CommandBase {
             String json = new String(t.getRequestBody().readAllBytes());
             String[] out = json.substring(1, json.length() - 1).replaceAll("\".\":", "").split(",");
 
-            double x = Double.valueOf(out[0])/100.0;
-            double y = Double.valueOf(out[1])/100.0;
+            double x = Double.parseDouble(out[0])/100.0;
+            double y = Double.parseDouble(out[1])/100.0;
             speeds = new double[] {x, y};
 
             drive.set((y - x) * driveSensitivity, (y + x) * driveSensitivity);
@@ -122,7 +126,6 @@ public class TitanDS extends CommandBase {
             } else {
                 barrelTilt.set(0);
             }
-            SmartDashboard.putNumber("tiltval", tiltVal);
             finishRequest(t);
         }
     }
@@ -151,9 +154,8 @@ public class TitanDS extends CommandBase {
             if (!t.getRequestMethod().equalsIgnoreCase("POST")) t.sendResponseHeaders(404, 0);
 
             String json = new String(t.getRequestBody().readAllBytes());
-            int timeVal = Integer.parseInt(json.substring(1, json.length() - 1).replaceAll("\".*\":", "").replace("\"", ""));
 
-            Robot.shoot_delay = timeVal;
+            Robot.shoot_delay = Integer.parseInt(json.substring(1, json.length() - 1).replaceAll("\".*\":", "").replace("\"", ""));
             if (Robot.shoot_delay < 25) {
                 Robot.shoot_delay = 25;
             }
@@ -162,7 +164,7 @@ public class TitanDS extends CommandBase {
     }
 
     private static void startWebServer() {
-        HttpServer server = null;
+        HttpServer server;
         try {
             server = HttpServer.create(new InetSocketAddress(1683), 0);
         } catch (IOException e) {

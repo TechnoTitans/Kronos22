@@ -17,9 +17,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-    private Command m_autonomousCommand;
-
-    private RobotContainer m_robotContainer;
+    private Command autonomousCommand;
+    private RobotContainer robotContainer;
 
     public static double shoot_delay = 45;
 
@@ -33,14 +32,14 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
-        m_robotContainer = new RobotContainer();
-        m_robotContainer.dout.set(false);
-        m_robotContainer.barrel.getBarrel().resetEncoder();
-        m_robotContainer.drive.coast();
+        robotContainer = new RobotContainer();
+        robotContainer.dout.set(false);
+        robotContainer.barrel.getBarrel().resetEncoder();
+        robotContainer.drive.coast();
         if (isController) {
             SmartDashboard.putNumber("ShootTime", 45);
-            CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
-            CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
+            CommandScheduler.getInstance().setDefaultCommand(robotContainer.drive, robotContainer.driveTeleop);
+            CommandScheduler.getInstance().setDefaultCommand(robotContainer.barrelTilt, robotContainer.tiltTeleop);
         }
     }
 
@@ -74,11 +73,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-        m_robotContainer.drive.brake();
-        m_robotContainer.drive.set(0, 0);
-        m_robotContainer.tiltMotor.stop();
-        m_robotContainer.barrelMotor.stop();
-        m_robotContainer.spike.set(Relay.Value.kOff);
+        robotContainer.drive.brake();
+        robotContainer.drive.set(0, 0);
+        robotContainer.tiltMotor.stop();
+        robotContainer.barrelMotor.stop();
+        robotContainer.spike.set(Relay.Value.kOff);
     }
 
     @Override
@@ -90,11 +89,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
+        if (autonomousCommand != null) {
+            autonomousCommand.schedule();
         }
     }
 
@@ -111,13 +110,13 @@ public class Robot extends TimedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel();
         }
-        m_robotContainer.drive.brake();
+        robotContainer.drive.brake();
         if (isController) {
-            CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.drive, m_robotContainer.driveTeleop);
-            CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.barrelTilt, m_robotContainer.tiltTeleop);
+            CommandScheduler.getInstance().setDefaultCommand(robotContainer.drive, robotContainer.driveTeleop);
+            CommandScheduler.getInstance().setDefaultCommand(robotContainer.barrelTilt, robotContainer.tiltTeleop);
         }
     }
 
@@ -130,7 +129,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        m_robotContainer.drive.coast();
+        robotContainer.drive.coast();
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
     }
