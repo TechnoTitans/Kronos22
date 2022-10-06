@@ -57,7 +57,7 @@ public class TitanDS extends CommandBase {
     public void execute() {
         double[] newSpd = new double[2];
 
-        if (timer.hasElapsed(150)) { //This is 150 not 100 to allow for 50 ms latency.
+        if (timer.hasElapsed(0.15)) { //This is 150 not 100 to allow for 50 ms latency.
             if (Arrays.equals(speeds, newSpd)) {
                 drive.set(0, 0);
             }
