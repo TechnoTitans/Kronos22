@@ -27,9 +27,9 @@ public class DriveTeleop extends CommandBase {
         // Remove drift from controller by adding deadband
         double steering = steeringInput.getAsDouble() > -0.25 && steeringInput.getAsDouble() < 0.25 ? 0 : steeringInput.getAsDouble();
         steering *= 0.7;
-        double throttle = leftInput.getAsDouble() - rightInput.getAsDouble();
+        double throttle = rightInput.getAsDouble() - leftInput.getAsDouble();
         double SENSITIVITY = 0.6;
-        drive.set((throttle - steering) * SENSITIVITY, (throttle + steering) * SENSITIVITY);
+        drive.set((throttle + steering) * SENSITIVITY, (throttle - steering) * SENSITIVITY);
     }
 
     @Override
