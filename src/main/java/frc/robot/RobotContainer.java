@@ -133,8 +133,8 @@ public class RobotContainer {
                 spike.set(spikeMode);
             }));
 
-//            turnButton.whenPressed(new InstantCommand(() -> barrelMotor.set(0.5)));
-//            turnButton.whenReleased(new InstantCommand( () -> barrel.set(0)));
+//            indexButton.whenPressed(new InstantCommand(() -> barrelMotor.set(0.5)));
+//            indexButton.whenReleased(new InstantCommand( () -> barrel.set(0)));
         }
     }
 
