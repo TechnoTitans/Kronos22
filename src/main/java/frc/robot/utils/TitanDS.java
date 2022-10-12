@@ -57,7 +57,7 @@ public class TitanDS extends CommandBase {
     public void execute() {
         double[] newSpd = new double[2];
 
-        if (timer.hasElapsed(0.15)) { //This is 150 not 100 to allow for 50 ms latency.
+        if (timer.hasElapsed(0.15)) { //This is 0.15 (150 ms) to allow for 50 ms latency from js query.
             if (Arrays.equals(speeds, newSpd)) {
                 drive.set(0, 0);
             }
@@ -93,7 +93,7 @@ public class TitanDS extends CommandBase {
 
             double x = Double.parseDouble(out[0])/100.0;
             double y = Double.parseDouble(out[1])/100.0;
-            speeds = new double[] {x, y};
+            speeds = new double[] {x, y}; //{0, 0}
 
             drive.set((y - x) * driveSensitivity, (y + x) * driveSensitivity);
             finishRequest(t);
