@@ -166,7 +166,7 @@ public class TitanDS extends CommandBase {
     private static void startWebServer() {
         HttpServer server;
         try {
-            server = HttpServer.create(new InetSocketAddress(1683), 0);
+            server = HttpServer.create(new InetSocketAddress(1683), 0); // 10.16.83.2:1683
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

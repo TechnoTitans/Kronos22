@@ -142,6 +142,7 @@ function currentSliderVal(slider) {
     // }
 
     sendTilt(sliderpos);
+    while (sliderpos === 0) sendTilt(0);
 }
 
 function ontoggleRobotbtn(btn) {
