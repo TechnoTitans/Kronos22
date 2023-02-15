@@ -129,9 +129,4 @@ public class RobotContainer {
             indexButton.whenPressed(indexTeleop);
         }
     }
-
-    public Command getAutonomousCommand() {
-        // Unless you're crazy and want the big robot with the big scary air tanks to drive itself don't use this.
-        return null;
-    }
 }
