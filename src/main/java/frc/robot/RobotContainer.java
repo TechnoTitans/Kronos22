@@ -25,28 +25,28 @@ public class RobotContainer {
     public TitanDS titanDS;
 
     //Motors
-    public TitanSRX leftFront, leftRear, rightFront, rightRear;
-    public TitanSRX barrelMotor, tiltMotor;
+    public final TitanSRX leftFront, leftRear, rightFront, rightRear;
+    public final TitanSRX barrelMotor, tiltMotor;
 
     //Relay
-    public Relay spike;
+    public final Relay spike;
 
     //ColorSensor
-    public ColorSensorV3 colorSensor;
+    public final ColorSensorV3 colorSensor;
 
     //Value
     public static Relay.Value spikeMode = Relay.Value.kOff;
 
     //DigitalOutput
-    public DigitalOutput dout;
+    public final DigitalOutput dout;
 
     //Subsystems
-    public JankDrive drive;
-    public Barrel barrel;
-    public BarrelTilt barrelTilt;
+    public final JankDrive drive;
+    public final Barrel barrel;
+    public final BarrelTilt barrelTilt;
 
     //Buttons
-    public TitanButton indexButton, shootButton, compressorButton;
+    public TitanButton shootButton, indexButton, compressorButton;
 
     //Commands
     public DriveTeleop driveTeleop;
@@ -72,7 +72,7 @@ public class RobotContainer {
         //DriveTrain stuff
         drive = new JankDrive(leftFront, rightFront);
         if (Robot.isController) {
-            driveTeleop = new DriveTeleop(drive, oi::getXboxLeftTrigger, oi::getXboxRightTrigger, oi::getXboxRightX);
+            driveTeleop = new DriveTeleop(drive, oi.getXbox());
         }
 
         //Turret
@@ -95,15 +95,6 @@ public class RobotContainer {
         //Set PWM rate or it won't pulse right length
         dout.setPWMRate(10000); //Random Value
 
-        if (Robot.isController) {
-            //Index Barrel
-            indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
-            //Shoot
-            shootButton = new TitanButton(oi.getXbox(), OI.XBOX_A);
-            //Toggle Compressor
-            compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_Y);
-        }
-
         //ColorSensor
         colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
         colorSensor.configureColorSensor(ColorSensorV3.ColorSensorResolution.kColorSensorRes16bit, ColorSensorV3.ColorSensorMeasurementRate.kColorRate25ms, ColorSensorV3.GainFactor.kGain18x);
@@ -112,7 +103,11 @@ public class RobotContainer {
         indexTeleop = new IndexTeleop(barrel, colorSensor);
 
         if (Robot.isController) {
-            tiltTeleop = new TiltTeleop(barrelTilt, oi::getXboxPOV);
+            shootButton = new TitanButton(oi.getXbox(), OI.XBOX_BUMPER_RIGHT);
+            compressorButton = new TitanButton(oi.getXbox(), OI.XBOX_A);
+            indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
+
+            tiltTeleop = new TiltTeleop(barrelTilt, oi.getXbox());
             shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
         } else {
             autoShoot = new AutoShoot(dout, indexTeleop);
@@ -126,15 +121,12 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         if (Robot.isController) {
-            indexButton.whenPressed(indexTeleop);
-            shootButton.whenPressed(shootTeleop);
             compressorButton.whenPressed(new InstantCommand(() -> {
                 spikeMode = spike.get() == Relay.Value.kOff ? Relay.Value.kForward : Relay.Value.kOff;
                 spike.set(spikeMode);
             }));
 
-//            indexButton.whenPressed(new InstantCommand(() -> barrelMotor.set(0.5)));
-//            indexButton.whenReleased(new InstantCommand( () -> barrel.set(0)));
+            indexButton.whenPressed(indexTeleop);
         }
     }
 

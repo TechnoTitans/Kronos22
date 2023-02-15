@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -19,10 +20,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
+    private SendableChooser<Boolean> driveChooser;
 
     public static double shoot_delay = 45;
 
-    public static final boolean isController = false;
+    public static boolean isController = false;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -33,14 +35,14 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         robotContainer = new RobotContainer();
+        driveChooser = new SendableChooser();
         robotContainer.dout.set(false);
         robotContainer.barrel.getBarrel().resetEncoder();
         robotContainer.drive.coast();
-        if (isController) {
-            SmartDashboard.putNumber("ShootTime", 45);
-            CommandScheduler.getInstance().setDefaultCommand(robotContainer.drive, robotContainer.driveTeleop);
-            CommandScheduler.getInstance().setDefaultCommand(robotContainer.barrelTilt, robotContainer.tiltTeleop);
-        }
+
+        driveChooser.setDefaultOption("controller", true);
+        driveChooser.addOption("website", false);
+        SmartDashboard.putData("drive Mode", driveChooser);
     }
 
     /**
@@ -114,7 +116,9 @@ public class Robot extends TimedRobot {
             autonomousCommand.cancel();
         }
         robotContainer.drive.brake();
+        isController = driveChooser.getSelected();
         if (isController) {
+            SmartDashboard.putNumber("ShootTime", 45);
             CommandScheduler.getInstance().setDefaultCommand(robotContainer.drive, robotContainer.driveTeleop);
             CommandScheduler.getInstance().setDefaultCommand(robotContainer.barrelTilt, robotContainer.tiltTeleop);
         }

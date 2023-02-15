@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.BarrelTilt;
 
@@ -7,11 +8,11 @@ import java.util.function.DoubleSupplier;
 
 public class TiltTeleop extends CommandBase {
     private final BarrelTilt barrelTilt;
-    private final DoubleSupplier button;
+    private final XboxController controller;
 
-    public TiltTeleop(BarrelTilt barrelTilt, DoubleSupplier button) {
+    public TiltTeleop(BarrelTilt barrelTilt, XboxController controller) {
         this.barrelTilt = barrelTilt;
-        this.button = button;
+        this.controller = controller;
         addRequirements(barrelTilt);
     }
 
@@ -21,13 +22,7 @@ public class TiltTeleop extends CommandBase {
     @Override
     public void execute() {
         double SPEED = 0.45;
-        if (button.getAsDouble() == 0) {
-            barrelTilt.set(SPEED);
-        } else if (button.getAsDouble() == 180) {
-            barrelTilt.set(-SPEED *0.5);
-        } else {
-            barrelTilt.set(0);
-        }
+        barrelTilt.set(controller.getRightY() * SPEED);
     }
 
     @Override

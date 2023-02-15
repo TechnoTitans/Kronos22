@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.JankDrive;
 
@@ -7,15 +8,11 @@ import java.util.function.DoubleSupplier;
 
 public class DriveTeleop extends CommandBase {
     private final JankDrive drive;
-    private final DoubleSupplier leftInput;
-    private final DoubleSupplier rightInput;
-    private final DoubleSupplier steeringInput;
+    private final XboxController controller;
 
-    public DriveTeleop(JankDrive drive, DoubleSupplier leftInput, DoubleSupplier rightInput, DoubleSupplier steeringInput) {
+    public DriveTeleop(JankDrive drive, XboxController controller) {
         this.drive = drive;
-        this.leftInput = leftInput;
-        this.rightInput = rightInput;
-        this.steeringInput = steeringInput;
+        this.controller = controller;
         addRequirements(drive);
     }
 
@@ -25,10 +22,9 @@ public class DriveTeleop extends CommandBase {
     @Override
     public void execute() {
         // Remove drift from controller by adding deadband
-        double steering = steeringInput.getAsDouble() > -0.25 && steeringInput.getAsDouble() < 0.25 ? 0 : steeringInput.getAsDouble();
-        steering *= 0.7;
-        double throttle = rightInput.getAsDouble() - leftInput.getAsDouble();
-        double SENSITIVITY = 0.6;
+        double steering = controller.getLeftX();
+        double throttle = controller.getLeftY();
+        double SENSITIVITY = 0.5;
         drive.set((throttle + steering) * SENSITIVITY, (throttle - steering) * SENSITIVITY);
     }
 
