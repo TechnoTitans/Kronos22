@@ -23,7 +23,7 @@ public class DriveTeleop extends CommandBase {
     public void execute() {
         // Remove drift from controller by adding deadband
         double steering = controller.getLeftX();
-        double throttle = controller.getLeftY();
+        double throttle = -controller.getLeftY();
         double SENSITIVITY = 0.5;
         drive.set((throttle + steering) * SENSITIVITY, (throttle - steering) * SENSITIVITY);
     }

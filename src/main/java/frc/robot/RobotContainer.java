@@ -91,7 +91,7 @@ public class RobotContainer {
         spike = new Relay(0);
 
         //Create DigitalOutput (Shooting)
-        dout = new DigitalOutput(2);
+        dout = new DigitalOutput(3);
         //Set PWM rate or it won't pulse right length
         dout.setPWMRate(10000); //Random Value
 
@@ -108,7 +108,7 @@ public class RobotContainer {
             indexButton = new TitanButton(oi.getXbox(), OI.XBOX_B);
 
             tiltTeleop = new TiltTeleop(barrelTilt, oi.getXbox());
-            shootTeleop = new ShootTeleop(dout, indexTeleop, shootButton);
+            shootTeleop = new ShootTeleop(dout, indexTeleop);
         } else {
             autoShoot = new AutoShoot(dout, indexTeleop);
 
@@ -127,6 +127,7 @@ public class RobotContainer {
             }));
 
             indexButton.whenPressed(indexTeleop);
+            shootButton.whenPressed(shootTeleop);
         }
     }
 }

@@ -11,13 +11,11 @@ import frc.robot.utils.TitanButton;
 public class ShootTeleop extends CommandBase {
     private final DigitalOutput dout;
     private final IndexTeleop indexTeleop;
-    private final TitanButton btn;
     private final Timer timer;
 
-    public ShootTeleop(DigitalOutput dout, IndexTeleop indexTeleop, TitanButton btn) {
+    public ShootTeleop(DigitalOutput dout, IndexTeleop indexTeleop) {
         this.dout = dout;
         this.indexTeleop = indexTeleop;
-        this.btn = btn;
         this.timer = new Timer();
     }
 
@@ -25,7 +23,6 @@ public class ShootTeleop extends CommandBase {
     public void initialize() {
         if (!dout.isPulsing()) {
             //21 is min for solenoid but rio can output faster
-            btn.rumble(0.3);
             timer.reset();
             timer.start();
             SmartDashboard.putNumber("actual delay", Robot.shoot_delay);
@@ -39,7 +36,6 @@ public class ShootTeleop extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        btn.stopRumble();
         CommandScheduler.getInstance().schedule(indexTeleop); //turns barrel after shot
     }
 

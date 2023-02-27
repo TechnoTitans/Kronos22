@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
 
     public static double shoot_delay = 45;
 
-    public static boolean isController = false;
+    public static boolean isController = true;
 
     /**
      * This function is run when the robot is first started up and should be used for any

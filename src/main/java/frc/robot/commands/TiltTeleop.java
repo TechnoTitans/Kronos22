@@ -22,7 +22,7 @@ public class TiltTeleop extends CommandBase {
     @Override
     public void execute() {
         double SPEED = 0.45;
-        barrelTilt.set(controller.getRightY() * SPEED);
+        barrelTilt.set(-controller.getRightY() * SPEED);
     }
 
     @Override
